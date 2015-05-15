@@ -13,6 +13,6 @@ return array
 		"is"=> true,
 		"list"=> array
 		(
-				"index", "hp"
+				"index"
 		)
 );

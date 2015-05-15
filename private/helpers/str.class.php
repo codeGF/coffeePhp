@@ -5,6 +5,25 @@ class Str
 {
     
     /**
+     * @param unknown $table
+     * @param unknown $userid
+     * @param string $excision
+     * @return string
+     */
+    public function hashTable($table, $userid, $excision="_")
+    {
+        $str = crc32($userid);
+        if ($str < 0)
+        {
+            $hash = sprintf("%s%s", 0, substr(abs($str), 0, 1));
+        }else
+       {
+            $hash = substr($str, 0, 2);
+        }
+        return sprintf("%s%s%s", $table, $excision, $hash);
+    }
+    
+    /**
      * 加载配置文件 支持格式转换 仅支持一级配置
      * @param string $file 配置文件名
      * @param string $parse 配置解析方法 有些格式需要用户自己解析

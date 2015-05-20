@@ -41,6 +41,21 @@ class OutPut extends Base
             return $this->_str($tmpcode, $desc, $data);
         }
     }
+    
+    public function location($title, $url=null, $data=array())
+    {
+        $js = "alert('{$title}');";
+        if ($url != null)
+        {
+            $js .= "window.location.href = {$url}&";
+            if (!empty($data))
+            {
+                $js .= http_build_query($data);
+            }
+        }
+        System::quit("<script type='text/javascript'>{$js}</script>");
+        return;
+    }
 
     private function _json($code, $desc, $data)
     {

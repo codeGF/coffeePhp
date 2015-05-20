@@ -7,11 +7,27 @@ abstract class Controller extends Base
 {
 
     protected $view_ = array();
+    protected $layout_ = array();
 
     public function __construct()
     {
         parent::__construct();
         $this->view_ = (object)array();
+        $this->layout_ = (object)array();
+    }
+    
+    final protected function layout_($file)
+    {
+        $view = sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@APP_LAYOUT_PATH"), $file);
+        if (file_exists($view) == true)
+        {
+            extract((array)$this->layout_);
+            require $view;
+        }else
+        {
+            System::error(11119, $view);
+        }
+        return;
     }
 
 	final protected function display_($name="")

@@ -46,7 +46,7 @@ class AutoService //加载业务层，加载并且实例化，类似于：$this-
     }
 }
 
-class AutoExt //加载扩展层
+class AutoExt //内部加载扩展层
 {
 	public function __get($name)
 	{
@@ -64,6 +64,26 @@ class AutoExt //加载扩展层
 		}
 		return ServiceManager::get(sprintf("%s@%s", __CLASS__, $name));
 	}
+}
+
+class AutoLib //外部扩展层 $this->auto_->lib->test = ".class.php";  $this->auto_->lib->test = "/abc.class.php";
+{
+    public function __set($name, $value)
+    {
+        if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
+        {
+            $mvc = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LIB_PATH"), $name, $value);
+            require_cache($mvc);
+            if (class_exists($name))
+            {
+                ServiceManager::set(sprintf("%s@%s", __CLASS__, $name), true);
+            }else
+           {
+                System::error(11117, $name);
+            }
+        }
+        return ServiceManager::get(sprintf("%s@%s", __CLASS__, $name));
+    }
 }
 
 class AutoConfig //加载配置文件，加载并且输出object类型的数组对象

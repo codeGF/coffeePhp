@@ -6,7 +6,7 @@ class Check
 
     private function _preg($preg, $str)
     {
-        return preg_match($preg, $str) ? true : false;
+        return preg_match($preg, $str);
     }
 
     //验证ip地址是否正确

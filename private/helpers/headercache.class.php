@@ -34,7 +34,7 @@ class HeaderCache extends Base
         System::header
         (
             array
-           (
+            (
                 "Pragma: privat",
                 "Cache-Control:max-age={$this->date}, pre-check={$this->date}",
                 "Expires: {$expires} GMT",

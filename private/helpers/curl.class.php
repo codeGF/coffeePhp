@@ -216,6 +216,6 @@ class Curl extends Base
             88 => "CURLE_CHUNK_FAILED",
             89 => "CURLE_NO_CONNECTION_AVAILABLE",
         );
-        return isset($error_codes[$k]) ? $error_codes[$k] : "errno:{$k}";
+        return isset($error_codes[$k]) ? $error_codes[$k] : "CURLE_ERR_NO:{$k}";
     }
 }

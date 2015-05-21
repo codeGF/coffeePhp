@@ -18,11 +18,11 @@ class download
 		$full_file_name = $server_path . '/' . $file_name;
 		if ($this->_check_file_ext($file_name) && $this->_check_file_exists($full_file_name))
 		{
-			header("Content-Type: {$mime_type}");
+			System::header("Content-Type: {$mime_type}");
 			$file_name = '"' . htmlspecialchars($file_name) . '"';
 			$file_size = filesize($full_file_name);
-			header("Content-Disposition: attachment; filename={$file_name}; charset=utf-8");
-			header("Content-Length: {$file_size}");
+			System::header("Content-Disposition: attachment; filename={$file_name}; charset=utf-8");
+			System::header("Content-Length: {$file_size}");
 			readfile($full_file_name);
 		}
         System::quit();

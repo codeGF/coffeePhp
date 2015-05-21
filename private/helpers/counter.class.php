@@ -53,7 +53,7 @@ class Counter extends Base
                 $this->_stus = true;
                 $this->auto_->helpers->caches->main()->set(System::hash($this->k.$key), ++$num, $this->date);
             }else
-           {
+            {
                 $this->_stus = true;
                 if ($num > $this->nums) //大于阀值
                 {

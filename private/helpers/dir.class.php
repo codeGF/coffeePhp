@@ -33,7 +33,7 @@ class Dir
                             }
                         }
                     }else
-                  {
+                    {
                         $arr [] = "{$path}/{$filename}";
                     }
                 }
@@ -59,7 +59,7 @@ class Dir
                 {
                     $this->delete_folder($dir . '/' . $file);
                 }else
-              {
+                {
                     unlink($dir . '/' . $file);
                 }
             }

@@ -92,6 +92,8 @@
 				'error_str' => $err_str,
 				'query'     => $this->last_query
 			);
+			DBErrorManagement::$stus = array("error_str"=> $err_str, "query"=> $this->last_query); //设置异常管理错误信息
+			DBErrorManagement::deal(); //通知异常管理处理此次错误
 		}
 
 		/**********************************************************************

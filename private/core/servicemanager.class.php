@@ -8,6 +8,7 @@ class ServiceManager
 
 	private static $_data = array();
 	private static $_marked = "@";
+	private static $_symbol = array(".", "@", "/", "|");
 
 	private static function _key($name)
 	{
@@ -41,7 +42,7 @@ class ServiceManager
 			$value = self::getStorage($name);
 			if ($value == false)
 			{
-				$arr = explode(self::$_marked, $name);
+				$arr = explode(self::$_marked, str_replace(self::$_symbol, self::$_marked, $name));
 				$tmp = self::getStorage($arr[0]);
 				unset($arr[0]);
 				foreach ($arr as $k)

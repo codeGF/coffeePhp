@@ -5,12 +5,13 @@
 
 abstract class Model extends DataDriven
 {
-
-    protected $dbname_ = "";
-
+    
+    protected $dbname_ = null;
+    
     public function __construct()
     {
-    	parent::__construct();
+        parent::__construct();
+        $this->dbname_ = ServiceManager::get("DBErrorManagementDbname");
     }
 
     /**

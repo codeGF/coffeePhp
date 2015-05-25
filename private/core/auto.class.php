@@ -106,6 +106,7 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
 	public function __construct()
 	{
 	    require_cache(sprintf("%s/db.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH")));
+	    require_cache(sprintf("%s/dberrormanagement.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
 	    require_cache(sprintf("%s/ezsql/shared/ez_sql_core.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH")));
 		require_cache(sprintf("%s/datadriven.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
 		require_cache(sprintf("%s/model.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
@@ -113,19 +114,35 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
 
     public function __get($name) //调用model类
     {
-        if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
+        $model = ServiceManager::get(sprintf("%s@%s", __CLASS__, $name));
+        if ($model == false)
         {
             $file = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@APP_MODEL_PATH"), $name);
 		    require_cache($file);
 		    if (class_exists($name))
 		    {
-		    	ServiceManager::set(sprintf("%s@%s", __CLASS__, $name), new $name);
+		        $this->_setDBerrorData($name, $name::$conf);
+		        $model = new $name;
+		    	ServiceManager::set(sprintf("%s@%s", __CLASS__, $name), $model);
 			}else
 			{
 		    	System::error(11117, $name);
             }
         }
-        return ServiceManager::get(sprintf("%s@%s", __CLASS__, $name));
+        return $model;
+    }
+    
+    private function _setDBerrorData($name, $baseconf) //错误处理设置
+    {
+        $tname = $baseconf["name"];
+        ServiceManager::set("DBErrorManagementBasename", $name);
+        ServiceManager::set("DBErrorManagementBaseconf", $baseconf);
+        if (empty($baseconf["expand"]) != true)
+        {
+            $tname = sprintf("%s_%s", $baseconf["name"], date($baseconf["expand"], ServiceManager::get("SYSTEMCONF@SYSTEM_TIME")));
+        }
+        ServiceManager::set("DBErrorManagementDbname", $tname);
+        return;
     }
 }
 

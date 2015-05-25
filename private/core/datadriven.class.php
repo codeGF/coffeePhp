@@ -78,6 +78,7 @@ class DataDriven extends Base
             );
             $pdo->charset = $conf[$action]["charset"];
             ServiceManager::set("pdo{$action}", $pdo);
+            ServiceManager::set("DBErrorManagementBaseconn", $pdo);
         }
         return $pdo;
     }
@@ -99,6 +100,7 @@ class DataDriven extends Base
                 $conf[$action]["charset"]
             );
             ServiceManager::set("mysql{$action}", $mysql);
+            ServiceManager::set("DBErrorManagementBaseconn", $mysql);
         }
         return $mysql;
     }
@@ -120,6 +122,7 @@ class DataDriven extends Base
                 $conf[$action]["charset"]
             );
             ServiceManager::set("mysqli{$action}", $mysqli);
+            ServiceManager::set("DBErrorManagementBaseconn", $mysqli);
         }
         return $mysqli;
     }
@@ -141,6 +144,7 @@ class DataDriven extends Base
                 $conf[$action]["conv"]
             );
             ServiceManager::set("mssql{$action}", $mssql);
+            ServiceManager::set("DBErrorManagementBaseconn", $mssql);
         }
         return $mssql;
     }
@@ -162,6 +166,7 @@ class DataDriven extends Base
                 $conf[$action]["port"]
             );
             ServiceManager::set("postgresql{$action}", $postgresql);
+            ServiceManager::set("DBErrorManagementBaseconn", $postgresql);
         }
         return $postgresql;
     }
@@ -183,6 +188,7 @@ class DataDriven extends Base
                 $conf[$action]["conv"]
             );
             ServiceManager::set("sqlsrv{$action}", $sqlsrv);
+            ServiceManager::set("DBErrorManagementBaseconn", $sqlsrv);
         }
         return $sqlsrv;
     }
@@ -204,6 +210,7 @@ class DataDriven extends Base
                 $conf[$action]["conv"]
             );
             ServiceManager::set("sybase{$action}", $sybase);
+            ServiceManager::set("DBErrorManagementBaseconn", $sybase);
         }
         return $sybase;
     }
@@ -225,6 +232,7 @@ class DataDriven extends Base
                 $conf[$action]["port"]
             );
             ServiceManager::set("cubird{$action}", $cubird);
+            ServiceManager::set("DBErrorManagementBaseconn", $cubird);
         }
         return $cubird;
     }
@@ -244,6 +252,7 @@ class DataDriven extends Base
                 $conf[$action]["connstr"]
             );
             ServiceManager::set("oracle{$action}", $oracle);
+            ServiceManager::set("DBErrorManagementBaseconn", $oracle);
         }
         return $oracle;
     }

@@ -50,7 +50,7 @@ class ImgProcess
     private function getFormat($name)
     {
         $format = substr($this->source, strrpos($this->source, '.') + 1);
-		self::$class->target_path = sprintf("%s/%s.%s", trim($this->save, "/"), $name, $format); //保存图片路径
+		self::$class->target_path = sprintf("%s/%s.%s", $this->save, $name, $format); //保存图片路径
 		self::$class->source_path = $this->source; //原始图片路径
 		return;
     }

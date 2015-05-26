@@ -106,7 +106,7 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
 	public function __construct()
 	{
 	    require_cache(sprintf("%s/db.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH")));
-	    require_cache(sprintf("%s/dberrormanagement.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
+	    require_cache(sprintf("%s/dbmanagement.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
 	    require_cache(sprintf("%s/ezsql/shared/ez_sql_core.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH")));
 		require_cache(sprintf("%s/datadriven.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
 		require_cache(sprintf("%s/model.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));

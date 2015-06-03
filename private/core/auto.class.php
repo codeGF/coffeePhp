@@ -121,7 +121,7 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
 		    require_cache($file);
 		    if (class_exists($name))
 		    {
-		        $this->_setDBerrorData($name, $name::$conf);
+		        $this->_setDBerrorData($name);
 		        $model = new $name;
 		    	ServiceManager::set(sprintf("%s@%s", __CLASS__, $name), $model);
 			}else
@@ -132,16 +132,24 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
         return $model;
     }
     
-    private function _setDBerrorData($name, $baseconf) //错误处理设置
+    private function _setDBerrorData($name) //错误处理设置
     {
-        $tname = $baseconf["name"];
-        ServiceManager::set("DBErrorManagementBasename", $name);
-        ServiceManager::set("DBErrorManagementBaseconf", $baseconf);
-        if (empty($baseconf["expand"]) != true)
+        $appConf = require_cache(ServiceManager::get("SYSTEMCONF@APP_SQL_FILE_PATH"));
+        if (isset($appConf[$name]) == true)
         {
-            $tname = sprintf("%s_%s", $baseconf["name"], date($baseconf["expand"], ServiceManager::get("SYSTEMCONF@SYSTEM_TIME")));
-        }
-        ServiceManager::set("DBErrorManagementDbname", $tname);
+            $baseconf = $appConf[$name];
+            $tname = $baseconf["name"];
+            ServiceManager::set("DBErrorManagementBasename", $name);
+            ServiceManager::set("DBErrorManagementBaseconf", $baseconf);
+            if (empty($baseconf["expand"]) != true)
+            {
+                $tname = sprintf("%s_%s", $baseconf["name"], date($baseconf["expand"], ServiceManager::get("SYSTEMCONF@SYSTEM_TIME")));
+            }
+            ServiceManager::set("DBErrorManagementDbname", $tname);
+        }else
+       {
+           System::error(11140, ServiceManager::get("SYSTEMCONF@APP_SQL_FILE_PATH"));
+       }
         return;
     }
 }

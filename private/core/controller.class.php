@@ -18,7 +18,7 @@ abstract class Controller extends Base
     
     final protected function layout_($file)
     {
-        $view = sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@APP_LAYOUT_PATH"), $file);
+        $view = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LAYOUT_PATH"), $file, ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME"));
         if (file_exists($view) == true)
         {
             extract((array)$this->layout_);

@@ -37,29 +37,32 @@ class ServiceManager
 	public static function get($name) //获取资源
 	{
 		$value = false;
-		if (strpos($name, self::$_marked) !== false)
-		{
-			$value = self::getStorage($name);
-			if ($value == false)
-			{
-				$arr = explode(self::$_marked, str_replace(self::$_symbol, self::$_marked, $name));
-				$tmp = self::getStorage($arr[0]);
-				unset($arr[0]);
-				foreach ($arr as $k)
-				{
-				    if (isset($tmp[$k]) == true)
-				    {
-				        $value = $tmp[$k];
-				        break;
-				    }
-				}
-				$value ? self::setStorage($name, $value) : $value = false;
-			}
-		}else
-		{
-			$value = self::getStorage($name);
-		}
-		return $value;
+        if (strpos($name, self::$_marked) !== false)
+        {
+            $value = self::getStorage($name);
+            if ($value == false)
+            {
+                $arr = explode(self::$_marked, str_replace(self::$_symbol, self::$_marked, $name));
+                $tmp = self::getStorage($arr[0]);
+                unset($arr[0]);
+                foreach ($arr as $k)
+                {
+                    $tmp = $tmp[$k];
+                }
+                $value = $tmp;
+                if (is_bool($value) == false)
+                {
+                    self::setStorage($name, $value);
+                }else
+              {
+                  $value = false;
+                }
+            }
+        }else
+        {
+            $value = self::getStorage($name);
+        }
+        return $value;
 	}
 
 	public static function set($name, $value) //注册资源

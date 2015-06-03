@@ -34,7 +34,7 @@ $conf["APP_CONFIG_PATH"] = $conf["APP_PATH"]."/config"; //app config文件路径
 $conf["APP_CONTROLLER_PATH"] = $conf["APP_PATH"]."/controller"; //app controller脚本路径
 $conf["APP_MODEL_PATH"] = $conf["APP_PATH"]."/model"; //app model脚本路径
 $conf["APP_VIEW_PATH"] = $conf["APP_PATH"]."/view"; //app view脚本路径
-$conf["APP_LAYOUT_PATH"] = $conf["APP_VIEW_PATH"]."layout"; //公共视图路径
+$conf["APP_LAYOUT_PATH"] = $conf["APP_VIEW_PATH"]."/layout"; //公共视图路径
 $conf["APP_SERVICE_PATH"] = $conf["APP_PATH"]."/service"; //业务层脚本路径
 $conf["APP_TEMP_PATH"] = $conf["APP_PATH"]."/temp"; //业务层临时文件路径
 $conf["APP_EXT_PATH"] = $conf["APP_PATH"]."/ext"; //内部扩展层文件路径
@@ -48,6 +48,7 @@ $conf["APP_DISPLAY_NAME"] = ".html.php"; //模板名称
 $conf["APP_HOOK_CONF"] = $conf["APP_CONFIG_PATH"]."/hook.php"; //钩子配置文件
 $conf["APP_REGISTRY_CONF"] = $conf["APP_CONFIG_PATH"]."/registry.php"; //路由白名单配置文件
 $conf["APP_COMPILE_FILE_SAVE"] ="~compile_%s.php"; //编译后文件名称
+$conf["APP_SQL_FILE_PATH"] = $conf["APP_CONFIG_PATH"]."/sql.php"; //数据库语句文件名称
 //其他设置
 $conf["APP_SESSION_LOCAL_DIST"] = false; //是否执行本服务器session分布式储存，有利于提高session性能
 

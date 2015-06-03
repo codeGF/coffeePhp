@@ -41,7 +41,7 @@ class DBmanagEment extends Base
     {
         if (self::lock() == true)
         {
-            $sql = str_replace("{{table}}", self::$_dbname, self::$_baseconf["createTable"]);
+            $sql = str_replace("{table}", self::$_dbname, self::$_baseconf["createTable"]);
             self::$_baseconn->query($sql);
         }
         return;

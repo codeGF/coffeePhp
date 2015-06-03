@@ -37,4 +37,21 @@ class IP
 		$ip   = $long ? array($ip, $long) : array("0.0.0.0", 0);
 		return $ip[$type];
 	}
+	
+	public function isScope($uip, $scope) //检测IP是否在一个指定的范围内
+	{
+	    $result = false;
+	    $uip = str_replace(".", "", $uip);
+	    $scope = (array)$scope;
+	    foreach ($scope as $lsip)
+	    {
+	        $tmpip = str_replace(array(".", "*"), "", $lsip);
+	        if (strcasecmp($tmpip, substr($uip, 0, strlen($tmpip))) == 0)
+	        {
+	            $result = true;
+	            break;
+	        }
+	    }
+	    return $result;
+	}
 }

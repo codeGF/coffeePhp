@@ -34,6 +34,7 @@ $conf[11136] = "autoload只支持system和app俩个应用钩子，您调用的{e
 $conf[11137] = "系统不支持eval函数，钩子机制无法使用";
 $conf[11138] = "写入文件{e}失败";
 $conf[11139] = "加载配置文件函数{e}出错";
+$conf[11140] = "{e}中没有找到您操作model的数据配置，请确认是否填写";
 
 ServiceManager::set("ERRORCODE", $conf); //注册配置信息
 unset($conf);

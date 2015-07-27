@@ -31,7 +31,7 @@
 		var $debug_all        = false;  // same as $trace
 		var $debug_called     = false;
 		var $vardump_called   = false;
-		var $show_errors      = true;
+		var $show_errors      = false;
 		var $num_queries      = 0;
 		var $last_query       = null;
 		var $last_error       = null;
@@ -92,7 +92,7 @@
 				'error_str' => $err_str,
 				'query'     => $this->last_query
 			);
-			DBmanagEment::$stus = array("error_str"=> $err_str, "query"=> $this->last_query); //设置异常管理错误信息
+			DBmanagEment::$stus = array("msg"=> $err_str, "sql"=> $this->last_query); //设置异常管理错误信息
 			DBmanagEment::deal(); //通知异常管理处理此次错误
 		}
 

@@ -131,7 +131,7 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
         }
         return $model;
     }
-    
+
     private function _setDBerrorData($name) //错误处理设置
     {
         $appConf = require_cache(ServiceManager::get("SYSTEMCONF@APP_SQL_FILE_PATH"));

@@ -2,16 +2,16 @@
 
 
 /**
- * 数据库执行错误管理 
+ * 数据库执行错误管理
  * @author changguofeng <changguofeng3@163.com>
  * @param stus 错误信息分类
  * @param _conn 数据连接资源
- * @param _ecode 错误代码执行方法 
+ * @param _ecode 错误代码执行方法
  */
 
 class DBmanagEment extends Base
 {
-    
+
     public  static $stus = array();
     private static $_baseconn = null;
     private static $_basename = null;
@@ -19,12 +19,12 @@ class DBmanagEment extends Base
     private static $_baseconf = array();
     private static $_ecode = array
     (
-        "1146"=> "createTable" //表不存在错误码：创建表
+        "1146"=> "_createTable" //表不存在错误码：创建表
     );
-    
+
     public static function deal() //参数分析
     {
-        $arr = explode(",", self::$stus["error_str"]);
+        $arr = explode(",", self::$stus["msg"]);
         if (isset(self::$_ecode[trim($arr[1])]) == true)
         {
             self::$_basename = ServiceManager::get("DBErrorManagementBasename");
@@ -36,18 +36,18 @@ class DBmanagEment extends Base
         }
         return;
     }
-    
-    private static function createTable()
+
+    private static function _createTable()
     {
-        if (self::lock() == true)
+        if (self::_lock() == true)
         {
-            $sql = str_replace("{table}", self::$_dbname, self::$_baseconf["createTable"]);
-            self::$_baseconn->query($sql);
+            $create = str_replace("{table}", self::$_dbname, self::$_baseconf["createTable"]);
+            self::$_baseconn->query($create);
         }
         return;
     }
-    
-    private static function lock()
+
+    private static function _lock()
     {
         static $lock = array();
         if (isset($lock[self::$_dbname]) == false)

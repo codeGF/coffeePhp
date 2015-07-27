@@ -3,7 +3,7 @@
 
 class IP
 {
-	
+
 	/**
 	 * @param number $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
 	 * @param string $adv 是否进行高级模式获取（有可能被伪装）
@@ -37,16 +37,15 @@ class IP
 		$ip   = $long ? array($ip, $long) : array("0.0.0.0", 0);
 		return $ip[$type];
 	}
-	
+
 	public function isScope($uip, $scope) //检测IP是否在一个指定的范围内
 	{
 	    $result = false;
 	    $uip = str_replace(".", "", $uip);
-	    $scope = (array)$scope;
+	    $scope = explode(",", str_replace(array(".", "*"), "", implode(",", (array)$scope)));
 	    foreach ($scope as $lsip)
 	    {
-	        $tmpip = str_replace(array(".", "*"), "", $lsip);
-	        if (strcasecmp($tmpip, substr($uip, 0, strlen($tmpip))) == 0)
+	        if (strcasecmp($lsip, substr($uip, 0, strlen($lsip))) == 0)
 	        {
 	            $result = true;
 	            break;

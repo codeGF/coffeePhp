@@ -143,11 +143,11 @@ class Date
                 //为空默认取得当前时间戳
                 $tmpdate = time();
             }else
-            {
+           {
                 //把字符串转换成UNIX时间戳
                 $tmpdate = strtotime($date);
             }
-        }elseif (is_null($date)) 
+        }elseif (is_null($date))
         {
             //为空默认取得当前时间戳
             $tmpdate = time();

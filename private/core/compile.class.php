@@ -73,7 +73,6 @@ class Compile
 
     public static function run($isCompile=false, $name)
     {
-
         $compile = new Compile;
         if ($isCompile == true)
         {

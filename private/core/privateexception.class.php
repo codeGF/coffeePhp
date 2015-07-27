@@ -57,9 +57,8 @@ class PrivateException extends Exception
         }else
        {
             $this->toEmail();
-            $this->errorFriendly_();
         }
-        die($this->_errorHtml);
+        die;
     }
 
     protected function errorSystem_()
@@ -87,11 +86,7 @@ class PrivateException extends Exception
 
     private function toEmail()
     {
-        if (ServiceManager::get("SYSTEM_RUN_ERROR_EMAIL") == false)
-        {
-            include sprintf("%s/emailer/emailer.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH"));
-            ServiceManager::set("SYSTEM_RUN_ERROR_EMAIL", true);
-        }
+        require_cache(sprintf("%s/emailer/emailer.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH")));
         $emailObj = new Emailer((array)ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_TO_EMAIL"), array("SYSTEM_RUN_ERROR", $this->_errorHtml), true);
         $emailObj->email();
         return;

@@ -17,7 +17,6 @@ $conf["SYSTEM_TIME"] = $_SERVER["REQUEST_TIME"]; //初始化全局时间
 $conf["SYSTEM_ERROR_PROMPT"] = DEBUG; //错误级别，0禁止报告，E_ALL报告
 $conf["SYSTEM_ERROR_TO_EMAIL"] = array(""); //是否将错误发送到指定邮箱
 
-
 //【框架路径设置，结尾必须没有“/”】
 $conf["SYSTEM_CONF_PATH"] = ROOT."/conf"; //配置文件存放目录
 $conf["SYSTEM_CORE_PATH"] = ROOT."/core"; //框架核心文件
@@ -26,9 +25,7 @@ $conf["SYSTEM_HELPERS_PATH"] = ROOT."/helpers"; //框架扩展存放路径
 $conf["SYSTEM_IMPORT_PATH"] = ROOT."/import"; //框架第三方扩展路径
 $conf["SYSTEM_COMMON_PATH"] = ROOT."/common"; //系统函数库
 
-
 //【框架应用路径设置，结尾必须没有“/”】
-//文件路径设置
 $conf["APP_PATH"] = defined("APP") ? APP : dirname($_SERVER['SCRIPT_FILENAME']); //app应用路径
 $conf["APP_CONFIG_PATH"] = $conf["APP_PATH"]."/config"; //app config文件路径
 $conf["APP_CONTROLLER_PATH"] = $conf["APP_PATH"]."/controller"; //app controller脚本路径
@@ -52,21 +49,8 @@ $conf["APP_SQL_FILE_PATH"] = $conf["APP_CONFIG_PATH"]."/sql.php"; //数据库语
 //其他设置
 $conf["APP_SESSION_LOCAL_DIST"] = false; //是否执行本服务器session分布式储存，有利于提高session性能
 
-
 //【补充PHP不支持的常量】
 defined("__DIR__") or define("__DIR__", dirname(__FILE__));
-
-
-//【框架头信息设置】
-header("Content-Type: text/html;charset=".$conf["SYSTEM_ENCODING"]);
-header("Content-Language: zh-CN");
-header("Date: ".sprintf("%s GMT", gmdate('D, d M Y H:i:s', $conf["SYSTEM_TIME"] + 900)));
-header("Server: Tomcat/1.0.1");
-header("X-Powered-By: PHP/7.0");
-header("X-XSS-Protection: 1; mode=block");
-header("X-Content-Encoded-By: :)");
-header("Vary:Accept-Encoding");
-
 
 //【PHP设置】
 set_time_limit(60); //设置执行时间

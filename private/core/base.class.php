@@ -20,6 +20,7 @@ abstract class Base
 		if (ServiceManager::get("base@construct") == false)
 		{
 			$this->system_->date = ServiceManager::get("SYSTEMCONF@SYSTEM_TIME");
+			$this->system_->encoding = ServiceManager::get("SYSTEMCONF@SYSTEM_ENCODING");
 			$this->auto_ = new Auto;
 			ServiceManager::set("base@construct@auto_", $this->auto_);
 			ServiceManager::set("base@construct@base_", $this->system_);

@@ -3,14 +3,12 @@
 
 return array
 (
-		"CREATE_TABLE"=> array
-		(
-				"test"=> array
-				(
-						"name"=> "test",
-						"expand"=> "Y",
-						"createTable"=> "CREATE TABLE IF NOT EXISTS `{{table}}` (
-                                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
-				)
-        )
+    "tm"=> array
+    (
+        "name"=> "tm",
+        "expand"=> "",
+        "createTable"=> "CREATE TABLE IF NOT EXISTS `{table}` (
+            `id` int(10) DEFAULT '0'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+    ),
 );

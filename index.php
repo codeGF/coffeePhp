@@ -12,6 +12,7 @@ $tmpdirname = str_replace("\\", "/", dirname(__FILE__));
 
 define("DEBUG", E_ALL);
 define("SYSTEM_ROUTER_RUN", true);
+define("SEND_HEADER", true);
 define("ROOT", $tmpdirname."/private");
 define("APP", $tmpdirname."/project");
 define("MAIN", "index");

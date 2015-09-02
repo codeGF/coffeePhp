@@ -16,7 +16,7 @@ class Router extends Base
     public function __construct()
     {
     	parent::__construct();
-    	$this->_apprunk = ServiceManager::get("SYSTEMCONF@SYSTEM_APP_RUN_K");
+    	$this->_apprunk = ServiceManager::get("SYSTEMCONF@SYSTEM_APP_RUN_K", true);
     }
 
     private function _getRequest()
@@ -49,7 +49,7 @@ class Router extends Base
 		}
 		if (empty($this->_router[1]))
 		{
-			$this->_router[1] = ServiceManager::get("SYSTEMCONF@SYSTEM_APP_FUN_MAIN");
+			$this->_router[1] = ServiceManager::get("SYSTEMCONF@SYSTEM_APP_FUN_MAIN", true);
 		}
 		ServiceManager::set("router", array("appController"=>$this->_router[0], "appFunction"=>$this->_router[1]));
         $this->_appController = $this->_router[0];
@@ -60,7 +60,7 @@ class Router extends Base
     private function _loadController()
     {
     	$result = false;
-    	$appFile = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@APP_CONTROLLER_PATH"), $this->_appController);
+    	$appFile = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_CONTROLLER_PATH", true), $this->_appController, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
         if (file_exists($appFile))
         {
         	require $appFile;
@@ -82,7 +82,7 @@ class Router extends Base
 
     private function _registry()
     {
-    	$file = ServiceManager::get("SYSTEMCONF@APP_REGISTRY_CONF");
+    	$file = ServiceManager::get("SYSTEMCONF@APP_REGISTRY_CONF", true);
     	if (file_exists($file))
     	{
     		$data = require_cache($file);

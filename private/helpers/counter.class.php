@@ -38,7 +38,7 @@ class Counter extends Base
     
     public function stus($key) //获取指定key计数
     {
-        return $this->auto_->helpers->caches->main()->get(System::hash($this->k.$key));
+        return $this->auto_->helpers->caches->main()->get(System::hash("{$this->k}{$key}"));
     }
     
     public function add($key) //添加计数
@@ -46,12 +46,12 @@ class Counter extends Base
         if ($this->in() == false)
         {
             $this->auto_->helpers->lock->up(); //上锁
-            $num = $this->auto_->helpers->caches->main()->get(System::hash($this->k.$key));
+            $num = $this->auto_->helpers->caches->main()->get(System::hash("{$this->k}{$key}"));
             if ($num == false)
             {
                 $num = 0;
                 $this->_stus = true;
-                $this->auto_->helpers->caches->main()->set(System::hash($this->k.$key), ++$num, $this->date);
+                $this->auto_->helpers->caches->main()->set(System::hash("{$this->k}{$key}"), ++$num, $this->date);
             }else
             {
                 $this->_stus = true;
@@ -60,7 +60,7 @@ class Counter extends Base
                     $this->_stus = false;
                 }else
               {
-                    $this->auto_->helpers->caches->main()->set(System::hash($this->k.$key), ++$num, $this->date);
+                    $this->auto_->helpers->caches->main()->set(System::hash("{$this->k}{$key}"), ++$num, $this->date);
                 }
             }
             $this->auto_->helpers->lock->un(); //解锁

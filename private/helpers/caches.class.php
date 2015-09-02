@@ -8,7 +8,7 @@ class Caches extends Base
 
 	private function loadConf()
 	{
-		require_cache(sprintf("%s/cache.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH")));
+		require_cache(ServiceManager::get("SYSTEMCONF@APP_CACHE_CONF", true));
 		return;
 	}
 
@@ -24,7 +24,7 @@ class Caches extends Base
 		if ($result == false)
 		{
 			$this->loadConf(); $this->loadCacheFile();
-		    $result = new Cache(ServiceManager::get("CACHE_CONF"));
+		    $result = new Cache(ServiceManager::get("CACHE_CONF", true));
 			ServiceManager::set(__CLASS__, $result);
 		}
 		return $result;

@@ -10,6 +10,7 @@
 
 $tmpdirname = str_replace("\\", "/", dirname(__FILE__));
 
+define("SYSTEM_APP_RUN_K", "act");
 define("DEBUG", E_ALL);
 define("SYSTEM_ROUTER_RUN", true);
 define("SEND_HEADER", true);

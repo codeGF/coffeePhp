@@ -21,9 +21,9 @@ class Display
 		$viewfile = sprintf
 		(
 				"%s/%s%s",
-				ServiceManager::get("SYSTEMCONF@APP_VIEW_PATH"),
+				ServiceManager::get("SYSTEMCONF@APP_VIEW_PATH", true),
 				$name,
-				ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_TEMPLATES")
+				ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_TEMPLATES", true)
 		);
 		if (file_exists($viewfile))
 		{
@@ -38,7 +38,7 @@ class Display
 
 	public function tmpView($file)
 	{
-		$file = sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH"), $file);
+		$file = sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH", true), $file);
 		return require_cache($file);
 	}
 }

@@ -46,7 +46,7 @@ class Authcode
 	//加密
 	public function en($string)
 	{
-		$string = trim(sprintf("%s-%d-%d", $string, ceil(bcadd(ServiceManager::get("SYSTEMCONF@SYSTEM_TIME"), $this->expiry)), $this->expiry));
+		$string = trim(sprintf("%s-%d-%d", $string, ceil(bcadd(ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), $this->expiry)), $this->expiry));
 		$char = mcrypt_encrypt($this->_cipher, $this->key, $string, $this->_modes, $this->_iv);
 		$char = base64_encode($char);
 		$result = $this->_charconen($char);
@@ -64,7 +64,7 @@ class Authcode
 		if (isset($tmp[2]) && isset($tmp[1]) && isset($tmp[0]))
 		{
 			$result = $tmp[0];
-			if ($tmp["2"] != 0 && ServiceManager::get("SYSTEMCONF@SYSTEM_TIME") > $tmp["1"])
+			if ($tmp["2"] != 0 && ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true) > $tmp["1"])
 			{
 				$result = false;
 			}

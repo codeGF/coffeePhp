@@ -45,7 +45,7 @@ class Cache
     public function __construct(array $conf)
     {
         $this->_conf = $conf;
-        $this->_systemImportClassPath = ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH");
+        $this->_systemImportClassPath = ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true);
         $this->main();
     }
 
@@ -72,7 +72,7 @@ class Cache
         if ($cache)
         {
             $class = $cache[1];
-            require $cache[0];
+            require_cache($cache[0]);
             $this->_class = new $class($this->_conf);
         }
         return;

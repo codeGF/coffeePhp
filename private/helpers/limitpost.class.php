@@ -24,11 +24,11 @@ class LimitPost extends Base
 		$time = $this->auto_->helpers->session->get($this->key);
 		if (empty($time))
 		{
-			$this->auto_->helpers->session->set($this->key, ServiceManager::get("SYSTEMCONF@SYSTEM_TIME"));
+			$this->auto_->helpers->session->set($this->key, ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true));
 			$this->_results = true;
 		}else
 		{
-			$newtime = ServiceManager::get("SYSTEMCONF@SYSTEM_TIME");
+			$newtime = ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true);
 			$oldtime = $this->auto_->helpers->session->get($this->key);
 			if (($newtime - $oldtime) > $this->expires)
 			{

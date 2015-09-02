@@ -16,9 +16,9 @@ class Compile
     
     private function setPath()
     {
-        $this->_systemConfPath = ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH");
-        $this->_systemCorePath = ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH");
-        $this->_commonPath = ServiceManager::get("SYSTEMCONF@SYSTEM_COMMON_PATH");
+        $this->_systemConfPath = ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH", true);
+        $this->_systemCorePath = ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH", true);
+        $this->_commonPath = ServiceManager::get("SYSTEMCONF@SYSTEM_COMMON_PATH", true);
         return;
     }
 
@@ -28,7 +28,6 @@ class Compile
         (
             $this->_systemCorePath."/privateexception.class.php", //加载错误处理类
             $this->_commonPath."/commons.php", //加载系统函数库
-            $this->_systemCorePath."/system.class.php", //加载系统类
             $this->_systemCorePath."/auto.class.php", //加载自动加载类
             $this->_systemCorePath."/base.class.php", //加载框架基类
             $this->_systemCorePath."/controller.class.php", //加载框架控制器
@@ -76,8 +75,8 @@ class Compile
         $compile = new Compile;
         if ($isCompile == true)
         {
-            $compile->compileFilePath = ServiceManager::get("SYSTEMCONF@APP_COMPILE_FILE_PATH");
-            $compile->compileFileSave =  sprintf(ServiceManager::get("SYSTEMCONF@APP_COMPILE_FILE_SAVE"), $name);
+            $compile->compileFilePath = ServiceManager::get("SYSTEMCONF@APP_COMPILE_FILE_PATH", true);
+            $compile->compileFileSave =  sprintf(ServiceManager::get("SYSTEMCONF@APP_COMPILE_FILE_SAVE", true), $name);
             if (file_exists(sprintf("%s/%s", $compile->compileFilePath, $compile->compileFileSave)))
             {
             	require sprintf("%s/%s", $compile->compileFilePath, $compile->compileFileSave);

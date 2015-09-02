@@ -9,7 +9,7 @@ class Xml
      * @param type $xml
      * @return type
      */
-    private static function _compile($xml)
+    private function _compile($xml)
     {
         $xmlRes = xml_parser_create('utf-8');
         xml_parser_set_option($xmlRes, XML_OPTION_SKIP_WHITE, 1);
@@ -32,12 +32,12 @@ class Xml
         $root = is_null($root) ? "root" : $root;
         $xml .= "<?xml version=\"1.0\" encoding=\"$encoding\"?>";
         $xml .= "<$root>";
-        $xml .= self::_formatXml($data);
+        $xml .= $this->_formatXml($data);
         $xml .= "</$root>";
         return $xml;
     }
 
-    private static function _formatXml($data)
+    private function _formatXml($data)
     {
         if (is_object($data))
         {
@@ -53,12 +53,12 @@ class Xml
             $xml .= "<$k>";
             if (is_object($v) || is_array($v))
             {
-                $xml .= self::f_ormatXml($v);
+                $xml .= $this->_formatXml($v);
             }else
             {
                 $xml .= str_replace(array("&", "<", ">", "\"", "'", "-"), array("&amp;", "&lt;", "&gt;", "&quot;", "&apos;", "&#45;"), $v);
             }
-            list($k,) = explode(" ", $k);
+            list($k) = explode(" ", $k);
             $xml .= "</$k>";
         }
         return $xml;
@@ -71,9 +71,9 @@ class Xml
      */
     public function toArray($xml)
     {
-        $arrData = self::_compile($xml);
+        $arrData = $this->_compile($xml);
         $k = 1;
-        return $arrData ? self::getData($arrData, $k) : false;
+        return $arrData ? $this->getData($arrData, $k) : false;
     }
 
     /**
@@ -82,7 +82,7 @@ class Xml
      * @param int $i 层级
      * @return array    数组
      */
-    private static function getData($arrData, &$i)
+    private function getData($arrData, &$i)
     {
         $data = array();
         for ($i = $i; $i < count($arrData); $i++)
@@ -99,7 +99,7 @@ class Xml
                     break;
                 case "open": //块标签
                     $k = isset($data[$name]) ? count($data[$name]) : 0;
-                    $data[$name][$k] = self::getData($arrData, ++$i);
+                    $data[$name][$k] = $this->getData($arrData, ++$i);
                     break;
                 case "close":
                     return $data;

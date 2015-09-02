@@ -31,7 +31,7 @@
 		var $debug_all        = false;  // same as $trace
 		var $debug_called     = false;
 		var $vardump_called   = false;
-		var $show_errors      = false;
+		var $show_errors      = true;
 		var $num_queries      = 0;
 		var $last_query       = null;
 		var $last_error       = null;
@@ -81,7 +81,7 @@
 		*  Print SQL/DB error - over-ridden by specific DB class
 		*/
 
-		function register_error($err_str)
+		function register_error($err_str, $errno=0)
 		{
 			// Keep track of last error
 			$this->last_error = $err_str;
@@ -90,10 +90,11 @@
 			$this->captured_errors[] = array
 			(
 				'error_str' => $err_str,
-				'query'     => $this->last_query
+				'query'     => $this->last_query,
+				'errno'     => $errno
 			);
-			DBmanagEment::$stus = array("msg"=> $err_str, "sql"=> $this->last_query); //设置异常管理错误信息
-			DBmanagEment::deal(); //通知异常管理处理此次错误
+			DBmanagEment::$msg = array("errno"=> $errno, "error_str"=> $err_str, "query"=> $this->last_query); //设置异常管理错误信息
+			DBmanagEment::main();
 		}
 
 		/**********************************************************************

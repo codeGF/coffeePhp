@@ -19,16 +19,16 @@ abstract class Base
 	{
 		if (ServiceManager::get("base@construct") == false)
 		{
-			$this->system_->date = ServiceManager::get("SYSTEMCONF@SYSTEM_TIME");
-			$this->system_->encoding = ServiceManager::get("SYSTEMCONF@SYSTEM_ENCODING");
+			$this->system_->date = ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true);
+			$this->system_->encoding = ServiceManager::get("SYSTEMCONF@SYSTEM_ENCODING", true);
 			$this->auto_ = new Auto;
 			ServiceManager::set("base@construct@auto_", $this->auto_);
 			ServiceManager::set("base@construct@base_", $this->system_);
 			ServiceManager::set("base@construct", true);
 		}else
 		{
-			$this->auto_ = ServiceManager::get("base@construct@auto_");
-			$this->system_ = ServiceManager::get("base@construct@base_");
+			$this->auto_ = ServiceManager::get("base@construct@auto_", true);
+			$this->system_ = ServiceManager::get("base@construct@base_", true);
 		}
 		return;
 	}

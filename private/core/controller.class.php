@@ -14,10 +14,9 @@ abstract class Controller extends Base
         parent::__construct();
         $this->view_ = (object)array();
         $this->layout_ = (object)array();
-        $this->_sendHeader();
     }
 
-    final private function _sendHeader() //头信息设置
+    final private function _sendHeader()
     {
         if (defined("SEND_HEADER") && SEND_HEADER == true)
         {
@@ -41,7 +40,7 @@ abstract class Controller extends Base
     
     final protected function layout_($file)
     {
-        $view = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LAYOUT_PATH"), $file, ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME"));
+        $view = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LAYOUT_PATH", true), $file, ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME", true));
         if (file_exists($view) == true)
         {
             extract((array)$this->layout_);
@@ -58,14 +57,15 @@ abstract class Controller extends Base
 		$viewfile = sprintf
         (
             "%s/%s/%s%s",
-			ServiceManager::get("SYSTEMCONF@APP_VIEW_PATH"),
-			ServiceManager::get("router@appController"),
-			empty($name) ?  ServiceManager::get("router@appFunction") : $name,
-			ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME")
+			ServiceManager::get("SYSTEMCONF@APP_VIEW_PATH", true),
+			ServiceManager::get("router@appController", true),
+			empty($name) ?  ServiceManager::get("router@appFunction", true) : $name,
+			ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME", true)
 		);
 		if (file_exists($viewfile))
 		{
 			extract((array)$this->view_);
+            $this->_sendHeader();
 			require $viewfile;
 		}else
 		{

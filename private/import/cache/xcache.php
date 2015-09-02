@@ -13,7 +13,7 @@ class ExtXcache
 
     private function _getXcacheKey($key)
     {
-        return System::hash($this->_conf["key"].$key);
+        return System::hash("{$this->_conf["key"]}{$key}");
     }
 
     private function _getXcacheVar($var)

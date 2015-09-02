@@ -32,7 +32,7 @@ class AutoService //加载业务层，加载并且实例化，类似于：$this-
     {
         if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
         {
-            $mvc = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@APP_SERVICE_PATH"), $name);
+            $mvc = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_SERVICE_PATH", true), $name, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
             require_cache($mvc);
             if (class_exists($name))
             {
@@ -52,7 +52,7 @@ class AutoExt //内部加载扩展层
 	{
 		if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
 		{
-			$mvc = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@APP_EXT_PATH"), $name);
+			$mvc = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_EXT_PATH", true), $name, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
 			require_cache($mvc);
 			if (class_exists($name))
 			{
@@ -72,7 +72,7 @@ class AutoLib //外部扩展层 $this->auto_->lib->test = ".class.php";  $this->
     {
         if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
         {
-            $mvc = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LIB_PATH"), $name, $value);
+            $mvc = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LIB_PATH", true), $name, $value);
             require_cache($mvc);
             if (class_exists($name))
             {
@@ -91,10 +91,12 @@ class AutoConfig //加载配置文件，加载并且输出object类型的数组�
 
     public function __get($name)
     {
+        $name = str_replace("_", "/", $name); //下划线转换成路径
         if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
         {
-            $arr = require_cache(ServiceManager::get("SYSTEMCONF@APP_CONFIG_PATH")."/".$name.".php");
-            ServiceManager::set(sprintf("%s@%s", __CLASS__, $name), is_array($arr)? (object)$arr : false);
+            $file = sprintf("%s/%s.php", ServiceManager::get("SYSTEMCONF@APP_CONFIG_PATH", true), $name);
+            $conf = require_cache($file);
+            ServiceManager::set(sprintf("%s@%s", __CLASS__, $name), is_array($conf) ? (object)$conf : false);
         }
         return ServiceManager::get(sprintf("%s@%s", __CLASS__, $name));
     }
@@ -103,21 +105,24 @@ class AutoConfig //加载配置文件，加载并且输出object类型的数组�
 class AutoModel //加载model数据资源，加载并且实例化，类似于：$this->auto_->model->xxxx->xxxx();
 {
 
+    public $tabname = null;
+
 	public function __construct()
 	{
-	    require_cache(sprintf("%s/db.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH")));
-	    require_cache(sprintf("%s/dbmanagement.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
-	    require_cache(sprintf("%s/ezsql/shared/ez_sql_core.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH")));
-		require_cache(sprintf("%s/datadriven.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
-		require_cache(sprintf("%s/model.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH")));
+	    require_cache(ServiceManager::get("SYSTEMCONF@APP_DB_CONF", true));
+	    require_cache(sprintf("%s/dbmanagement%s", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH", true), ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true)));
+	    require_cache(sprintf("%s/ezsql/shared/ez_sql_core.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true)));
+		require_cache(sprintf("%s/datadriven%s", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH", true), ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true)));
+		require_cache(sprintf("%s/model%s", ServiceManager::get("SYSTEMCONF@SYSTEM_CORE_PATH", true), ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true)));
 	}
 
     public function __get($name) //调用model类
     {
+        $this->dbname = null;
         $model = ServiceManager::get(sprintf("%s@%s", __CLASS__, $name));
         if ($model == false)
         {
-            $file = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@APP_MODEL_PATH"), $name);
+            $file = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_MODEL_PATH", true), $name, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
 		    require_cache($file);
 		    if (class_exists($name))
 		    {
@@ -134,22 +139,20 @@ class AutoModel //加载model数据资源，加载并且实例化，类似于：
 
     private function _setDBerrorData($name) //错误处理设置
     {
-        $appConf = require_cache(ServiceManager::get("SYSTEMCONF@APP_SQL_FILE_PATH"));
+        $appConf = require_cache(ServiceManager::get("SYSTEMCONF@APP_SQL_CONF", true));
         if (isset($appConf[$name]) == true)
         {
-            $baseconf = $appConf[$name];
-            $tname = $baseconf["name"];
-            ServiceManager::set("DBErrorManagementBasename", $name);
-            ServiceManager::set("DBErrorManagementBaseconf", $baseconf);
-            if (empty($baseconf["expand"]) != true)
+            $this->tabname = $appConf[$name]["name"];
+            if (empty($appConf[$name]["expand"]) != true)
             {
-                $tname = sprintf("%s_%s", $baseconf["name"], date($baseconf["expand"], ServiceManager::get("SYSTEMCONF@SYSTEM_TIME")));
+                $this->tabname = sprintf("%s_%s", $appConf[$name]["name"], date($appConf[$name]["expand"], ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true)));
             }
-            ServiceManager::set("DBErrorManagementDbname", $tname);
+            $appConf[$name]["tabname"] = $this->tabname;
+            ServiceManager::set("DBmanagementConf", $appConf[$name]);
         }else
-       {
-           System::error(11140, ServiceManager::get("SYSTEMCONF@APP_SQL_FILE_PATH"));
-       }
+        {
+            System::error(11140, ServiceManager::get("SYSTEMCONF@APP_SQL_CONF", true));
+        }
         return;
     }
 }
@@ -161,7 +164,7 @@ class AutoController //controller资源，加载并且实例化，类似于：$t
     {
         if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
         {
-            $file = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@APP_CONTROLLER_PATH"), $name);
+            $file = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_CONTROLLER_PATH", true), $name, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
 		    require_cache($file);
             if (class_exists($name))
             {
@@ -181,7 +184,7 @@ class AutoHelpers //加载系统扩展，加载并且实例化，类似于：$th
     {
         if (ServiceManager::get(sprintf("%s@%s", __CLASS__, $name)) == false)
         {
-            $file = sprintf("%s/%s.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_HELPERS_PATH"), $name);
+            $file = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@SYSTEM_HELPERS_PATH", true), $name, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
             if (file_exists($file))
 			{
             	require_cache($file);

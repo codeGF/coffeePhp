@@ -41,21 +41,18 @@ function Exception(Exception $e)
 }
 
 function handleError($errorNo, $message, $filename, $lineNo) {
-    if (ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_PROMPT") != false)
-    {
-		$type = "[ERROR]";
-		switch ($errorNo)
-		{
-			case 2 :
-				$type = "[E_WARNING]";
-				break;
-			case 8 :
-				$type = "[E_NOTICE]";
-				break;
-		}
-		throw new PrivateException(array("message"=> sprintf("%s in file %s (line: %s) %s", $type, $filename, $lineNo, $message), "code"=> ""));
-		die;
+	$type = "[ERROR]";
+	switch ($errorNo)
+	{
+		case 2 :
+			$type = "[E_WARNING]";
+			break;
+		case 8 :
+			$type = "[E_NOTICE]";
+			break;
 	}
+	throw new PrivateException(array("message"=> sprintf("%s in file %s (line: %s) %s", $type, $filename, $lineNo, $message), "code"=> ""));
+	die;
 }
 
 set_exception_handler('exception'); //错误调用函数

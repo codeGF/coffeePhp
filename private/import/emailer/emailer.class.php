@@ -18,7 +18,7 @@
  * $access = $emailer->email();
  */
 
-require_cache(sprintf("%s/emailer.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH")));
+require_cache(sprintf("%s/emailer.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH", true)));
 import("emailer/class.phpmailer.php");
 
 class Emailer
@@ -39,14 +39,15 @@ class Emailer
 
 	public function __construct($emailer, $content, $format = null)
 	{
-		$this->Host = ServiceManager::get("MAIL_CONF@MAIL_HOST");
-		$this->SMTPAuth = ServiceManager::get("MAIL_CONF@MAIL_SMTPAUTH");
-		$this->Username = ServiceManager::get("MAIL_CONF@MAIL_USERNAME");
-		$this->Password = ServiceManager::get("MAIL_CONF@MAIL_PSWD");
-		$this->From = ServiceManager::get("MAIL_CONF@MAIL_TOEMAILER");
-		$this->FromName = ServiceManager::get("MAIL_CONF@MAIL_FROMNAME");
-		$this->WordWrap = ServiceManager::get("MAIL_CONF@MAIL_WORDWRAP");
-		$this->CharSet = ServiceManager::get("MAIL_CONF@MAIL_ENCODING");
+		$conf = ServiceManager::get("MAIL_CONF", true);
+		$this->Host = $conf["MAIL_HOST"];
+		$this->SMTPAuth = $conf["MAIL_SMTPAUTH"];
+		$this->Username = $conf["MAIL_USERNAME"];
+		$this->Password = $conf["MAIL_PSWD"];
+		$this->From = $conf["MAIL_TOEMAILER"];
+		$this->FromName = $conf["MAIL_FROMNAME"];
+		$this->WordWrap = $conf["MAIL_WORDWRAP"];
+		$this->CharSet = $conf["MAIL_ENCODING"];
 		$this->emailer = $emailer;
 		$this->content = $content;
 		$this->format = $format;

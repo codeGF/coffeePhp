@@ -13,247 +13,138 @@
 class DataDriven extends Base
 {
 
-    private static $_DBaction = false; //默认访问db配置
-
-    final private function _dbAction($action)
+    final protected function pdo_($show_errors=true, $action=null) //pdo驱动
     {
-    	if (!$action)
-    	{
-    		if (self::$_DBaction == false)
-    		{
-    			self::$_DBaction = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE");
-    		}
-    		$action = self::$_DBaction;
-    	}
-    	return $action;
-    }
-
-    final private function _loadConf($gate)
-    {
-    	if (ServiceManager::get("DB_CONF@{$gate}"))
-    	{
-    		return ServiceManager::get("DB_CONF@{$gate}");
-    	}
-    	System::error(11112, $gate);
-    	return;
-    }
-
-    final private function _loadezsql($gate)
-    {
-        $conf = array
-        (
-            "mysql"=> "mysql/ez_sql_mysql.php", //mysql
-            "mssql"=> "mssql/ez_sql_mssql.php", //mssql
-            "cubrid"=> "cubrid/ez_sql_cubrid.php", //cubrid
-            "mysqli"=> "mysqli/ez_sql_mysqli.php", //mysqli
-            "oracle"=> "oracle8_9/ez_sql_oracle8_9.php", //oracle
-            "postgresql"=> "postgresql/ez_sql_postgresql.php", //postgresql
-            "sqlsrv"=> "sqlsrv/es_sql_sqlsrv.php", //sqlsrv
-            "sybase"=> "sqlbase/ez_sql_sybase.php", //sybase
-            "pdo"=> "pdo/ez_sql_pdo.php", //pdo
-        );
-        if (isset($conf[$gate]))
-        {
-        	$filename = sprintf("%s/ezsql/%s", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH"), $conf[$gate]);
-        	return require_cache($filename);
-        }
-        System::error(11111);
-        return;
-    }
-
-    final protected function pdo_($action="") //pdo驱动
-    {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $pdo = ServiceManager::get("pdo{$action}");
         if ($pdo == false)
         {
-            $conf = $this->_loadConf("pdo");
-            $this->_loadezsql("pdo");
-            $pdo = new ezSQL_pdo
-            (
-                $conf[$action]["dsn"],
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["options"]
-            );
-            $pdo->charset = $conf[$action]["charset"];
+            $this->auto_->import->load("ezsql/pdo/ez_sql_pdo.php");
+            $conf = ServiceManager::get("DB_CONF@{$action}@pdo", true);
+            $pdo = new ezSQL_pdo($conf["dsn"], $conf["user"], $conf["password"], $conf["options"]);
             ServiceManager::set("pdo{$action}", $pdo);
-            ServiceManager::set("DBErrorManagementBaseconn", $pdo);
         }
+        $pdo->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $pdo;
     }
 
-    final protected function mysql_($action="") //mysql驱动
+    final protected function mysql_($show_errors=true, $action=null) //mysql驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $mysql = ServiceManager::get("mysql{$action}");
         if ($mysql == false)
         {
-            $conf = $this->_loadConf("mysql");
-            $this->_loadezsql("mysql");
-            $mysql = new ezSQL_mysql
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["charset"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@mysql", true);
+            $this->auto_->import->load("ezsql/mysql/ez_sql_mysql.php");
+            $mysql = new ezSQL_mysql($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["charset"]);
             ServiceManager::set("mysql{$action}", $mysql);
-            ServiceManager::set("DBErrorManagementBaseconn", $mysql);
         }
+        $mysql->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $mysql;
     }
 
-    final protected function mysqli_($action="") //mysql驱动，支持mysqli
+    final protected function mysqli_($show_errors=true, $action=null) //mysql驱动，支持mysqli
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $mysqli = ServiceManager::get("mysqli{$action}");
         if ($mysqli == false)
         {
-            $conf = $this->_loadConf("mysql");
-            $this->_loadezsql("mysqli");
-            $mysqli = new ezSQL_mysqli
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["charset"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@mysqli", true);
+            $this->auto_->import->load("ezsql/mysqli/ez_sql_mysqli.php");
+            $mysqli = new ezSQL_mysqli($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["charset"]);
             ServiceManager::set("mysqli{$action}", $mysqli);
-            ServiceManager::set("DBErrorManagementBaseconn", $mysqli);
         }
+        $mysqli->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $mysqli;
     }
 
-    final protected function mssql_($action="") //sqlserver驱动
+    final protected function mssql_($show_errors=true, $action=null) //sqlserver驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $mssql = ServiceManager::get("mssql{$action}");
         if ($mssql == false)
         {
-            $conf = $this->_loadConf("mssql");
-            $this->_loadezsql("mssql");
-            $mssql = new ezSQL_mssql
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["conv"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@mssql", true);
+            $this->auto_->import->load("ezsql/mssql/ez_sql_mssql.php");
+            $mssql = new ezSQL_mssql($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["conv"]);
             ServiceManager::set("mssql{$action}", $mssql);
-            ServiceManager::set("DBErrorManagementBaseconn", $mssql);
         }
+        $mssql->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $mssql;
     }
 
-    final protected function postgresql_($action="") //postgresql驱动
+    final protected function postgresql_($show_errors=true, $action=null) //postgresql驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $postgresql = ServiceManager::get("postgresql{$action}");
         if ($postgresql == false)
         {
-            $conf = $this->_loadConf("postgresql");
-            $this->_loadezsql("postgresql");
-            $postgresql = new ezSQL_postgresql
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["port"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@postgresql", true);
+            $this->auto_->import->load("ezsql/postgresql/ez_sql_postgresql.php");
+            $postgresql = new ezSQL_postgresql($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["port"]);
             ServiceManager::set("postgresql{$action}", $postgresql);
-            ServiceManager::set("DBErrorManagementBaseconn", $postgresql);
         }
+        $postgresql->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $postgresql;
     }
 
-    final protected function sqlsrv_($action="") //sqlsrv驱动
+    final protected function sqlsrv_($show_errors=true, $action=null) //sqlsrv驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $sqlsrv = ServiceManager::get("sqlsrv{$action}");
         if ($sqlsrv)
         {
-            $conf = $this->_loadConf("sqlsrv");
-            $this->_loadezsql("sqlsrv");
-            $sqlsrv = new ezSQL_sqlsrv
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["conv"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@sqlsrv", true);
+            $this->auto_->import->load("ezsql/sqlsrv/es_sql_sqlsrv.php");
+            $sqlsrv = new ezSQL_sqlsrv($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["conv"]);
             ServiceManager::set("sqlsrv{$action}", $sqlsrv);
-            ServiceManager::set("DBErrorManagementBaseconn", $sqlsrv);
         }
+        $sqlsrv->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $sqlsrv;
     }
 
-    final protected function sybase_($action="") //sybase驱动
+    final protected function sybase_($show_errors=true, $action=null) //sybase驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $sybase = ServiceManager::get("sybase{$action}");
         if ($sybase == false)
         {
-            $conf = $this->_loadConf("sybase");
-            $this->_loadezsql("sybase");
-            $sybase = new ezSQL_sybase
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["conv"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@sybase", true);
+            $this->auto_->import->load("ezsql/sqlbase/ez_sql_sybase.php");
+            $sybase = new ezSQL_sybase($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["conv"]);
             ServiceManager::set("sybase{$action}", $sybase);
-            ServiceManager::set("DBErrorManagementBaseconn", $sybase);
         }
+        $sybase->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $sybase;
     }
 
-    final protected function cubird_($action="") //cubird驱动
+    final protected function cubird_($show_errors=true, $action=null) //cubird驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $cubird = ServiceManager::get("cubird{$action}");
         if ($cubird == false)
         {
-            $conf = $this->_loadConf("cubird");
-            $this->_loadezsql("cubird");
-            $cubird = new ezSQL_cubrid
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["dbname"],
-                $conf[$action]["host"],
-                $conf[$action]["port"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@cubird", true);
+            $this->auto_->import->load("ezsql/cubrid/ez_sql_cubrid.php");
+            $cubird = new ezSQL_cubrid($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["port"]);
             ServiceManager::set("cubird{$action}", $cubird);
-            ServiceManager::set("DBErrorManagementBaseconn", $cubird);
         }
+        $cubird->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $cubird;
     }
 
-    final protected function oracle_($action="") //oracle驱动
+    final protected function oracle_($show_errors=true, $action=null) //oracle驱动
     {
-        $action = $this->_dbAction($action);
+        $action != null ? false : $action = ServiceManager::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $oracle = ServiceManager::get("oracle{$action}");
         if ($oracle == false)
         {
-            $conf = $this->_loadConf("oracle");
-            $this->_loadezsql("oracle");
-            $oracle = new ezSQL_oracle8_9
-            (
-                $conf[$action]["user"],
-                $conf[$action]["password"],
-                $conf[$action]["connstr"]
-            );
+            $conf = ServiceManager::get("DB_CONF@{$action}@oracle", true);
+            $this->auto_->import->load("ezsql/oracle8_9/ez_sql_oracle8_9.php");
+            $oracle = new ezSQL_oracle8_9($conf["user"], $conf["password"], $conf["connstr"]);
             ServiceManager::set("oracle{$action}", $oracle);
-            ServiceManager::set("DBErrorManagementBaseconn", $oracle);
         }
+        $oracle->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $oracle;
     }
 }

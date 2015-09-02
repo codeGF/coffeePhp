@@ -41,9 +41,9 @@ class System
 		exit($str);
 	}
 
-	public static function error($code, $message)
+	public static function error($code=null, $message=null)
 	{
-		throw new PrivateException(array("message"=>$message, "code"=>$code), 0);
+		throw new PrivateException(array("message"=> $message, "code"=> $code), 0);
 		self::quit();
 	}
 
@@ -87,5 +87,9 @@ class System
 	    {
 	        return $output;
 	    }
+	}
+
+	public static function shutdown()
+	{
 	}
 }

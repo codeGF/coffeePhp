@@ -116,7 +116,7 @@ class Upload extends Base
 			foreach ($this->_files["name"] as $key => $value)
 			{
 				$filename = explode(".", $value);
-				$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME"), $filename[0])), $filename[1]);
+				$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), $filename[0])), $filename[1]);
 				$tmparr["tmp_name"] = $this->_files["tmp_name"][$key];
 				$tmparr["original"] = $value;
 				$this->_rename[] = $tmparr;
@@ -124,7 +124,7 @@ class Upload extends Base
 		}else
        {
 			$filename = explode(".", $this->_files["name"]);
-			$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME"), $filename[0])), $filename[1]);
+			$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), $filename[0])), $filename[1]);
 			$tmparr["tmp_name"] = $this->_files["tmp_name"];
 			$tmparr["originalName"] = $this->_files["name"];
 			$this->_rename[] = $tmparr;

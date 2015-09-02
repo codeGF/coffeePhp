@@ -155,7 +155,7 @@ class Code extends Base
 
         $this->bgColor = $this->allBgColor[array_rand($this->allBgColor)];
         $this->fontColor = $this->allFontColor[array_rand($this->allFontColor)];
-        $this->fontDir = ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH").'/code/font/';
+        $this->fontDir = ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true).'/code/font/';
         $this->font = $this->fontConfig[array_rand($this->fontConfig)];
 
         $min_angle = 7;
@@ -399,11 +399,11 @@ class Code extends Base
     protected function outputImg()
     {
         ob_clean();
-        header("Cache-Control: no-cache, must-revalidate");
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header("Pragma: no-cache");
-        header("Cache-control: private");
-        header('Content-Type: image/jpeg');
+        System::header("Cache-Control: no-cache, must-revalidate");
+        System::header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        System::header("Pragma: no-cache");
+        System::header("Cache-control: private");
+        System::header('Content-Type: image/jpeg');
         imagejpeg($this->im);
         imagedestroy($this->im);
     }

@@ -10,8 +10,8 @@ class Session extends Base
 
     public function __construct()
     {
-    	$this->sessionk = ServiceManager::get("SYSTEMCONF@SYSTEM_SESSION_K");
-    	if (ServiceManager::get("SYSTEMCONF@APP_SESSION_LOCAL_DIST") == true)
+    	$this->sessionk = ServiceManager::get("SYSTEMCONF@SYSTEM_SESSION_K", true);
+    	if (ServiceManager::get("SYSTEMCONF@APP_SESSION_LOCAL_DIST", true) == true)
     	{
     		$this->_savePath();
     	}
@@ -73,7 +73,7 @@ class Session extends Base
 
     private function _savePath() //分布式session文件储存
     {
-    	$sessionPath = ServiceManager::get("SYSTEMCONF@APP_SESSION_PATH");
+    	$sessionPath = ServiceManager::get("SYSTEMCONF@APP_SESSION_PATH", true);
     	if (file_exists($sessionPath) == false)
     	{
     		$dir = '123456789abcdefghijklmnopqrstuvwxyz';

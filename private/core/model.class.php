@@ -6,12 +6,12 @@
 abstract class Model extends DataDriven
 {
     
-    protected $dbname_ = null;
+    protected $tabname_ = null;
     
     public function __construct()
     {
         parent::__construct();
-        $this->dbname_ = ServiceManager::get("DBErrorManagementDbname");
+        $this->tabname_ = $this->auto_->model->tabname;
     }
 
     /**
@@ -25,7 +25,7 @@ abstract class Model extends DataDriven
         (
         		"SELECT %s FROM `%s` %s %s %s",
                 $this->auto_->helpers->sqlstatement->term($term),
-                $this->dbname_,
+                $this->tabname_,
                 $this->auto_->helpers->sqlstatement->where($where),
         		$this->auto_->helpers->sqlstatement->order($order),
                 $this->auto_->helpers->sqlstatement->limit($limit)
@@ -42,7 +42,7 @@ abstract class Model extends DataDriven
         $sql = sprintf
         (
         		"INSERT INTO `%s` SET %s",
-        		$this->dbname_,
+        		$this->tabname_,
         		$this->auto_->helpers->sqlstatement->insertValue($data)
         );
         return $sql;
@@ -59,7 +59,7 @@ abstract class Model extends DataDriven
         $sql = sprintf
         (
         		"UPDATE `%s` SET %s %s %s",
-                $this->dbname_,
+                $this->tabname_,
                 $this->auto_->helpers->sqlstatement->insertValue($data),
                 $this->auto_->helpers->sqlstatement->where($where),
         		$this->auto_->helpers->sqlstatement->limit($limit)
@@ -77,7 +77,7 @@ abstract class Model extends DataDriven
         $sql = sprintf
         (
         		"DELETE FROM `%s` %s %s",
-        		$this->dbname_,
+        		$this->tabname_,
         		$this->auto_->helpers->sqlstatement->where($where),
         		$this->auto_->helpers->sqlstatement->limit($limit)
         );

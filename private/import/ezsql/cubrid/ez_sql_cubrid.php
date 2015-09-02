@@ -194,7 +194,7 @@
 			// If there is an error then take note of it..
 			if ( $str = @cubrid_error($this->dbh) )
 			{
-				$this->register_error($str);
+				$this->register_error($str, cubrid_errno($this->dbh));
 				$this->show_errors ? trigger_error($str,E_USER_WARNING) : null;
 				return false;
 			}

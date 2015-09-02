@@ -8,7 +8,7 @@ class ServiceManager
 
 	private static $_data = array();
 	private static $_marked = "@";
-	private static $_symbol = array(".", "@", "/", "|");
+	private static $_stu = false;
 
 	private static function _key($name)
 	{
@@ -25,43 +25,54 @@ class ServiceManager
 
 	private static function getStorage($name) //获取储存
 	{
-		$value = false;
+		$value = false; self::$_stu = false;
 		$key  =self::_key($name);
 		if (isset(self::$_data[$key]))
 		{
+			self::$_stu = true;
 			$value = self::$_data[$key];
 		}
 		return $value;
 	}
 
-	public static function get($name) //获取资源
+	public static function get($name, $error=false) //获取资源
 	{
-		$value = false;
+		$value = false; self::$_stu = false;
         if (strpos($name, self::$_marked) !== false)
         {
             $value = self::getStorage($name);
-            if ($value == false)
+            if (self::$_stu == false)
             {
-                $arr = explode(self::$_marked, str_replace(self::$_symbol, self::$_marked, $name));
+                $arr = explode(self::$_marked, $name);
                 $tmp = self::getStorage($arr[0]);
                 unset($arr[0]);
-                foreach ($arr as $k)
+                foreach ($arr as $v)
                 {
-                    $tmp = $tmp[$k];
+					if (isset($tmp[$v]) == false)
+					{
+						self::$_stu = false;
+						$tmp = false;
+						break;
+					}else
+					{
+						$tmp = $tmp[$v];
+						self::$_stu = true;
+					}
                 }
                 $value = $tmp;
-                if (is_bool($value) == false)
+                if (self::$_stu == true)
                 {
                     self::setStorage($name, $value);
-                }else
-              {
-                  $value = false;
                 }
             }
         }else
         {
             $value = self::getStorage($name);
         }
+		if (self::$_stu == false && $error == true)
+		{
+			System::error(11142, array(__CLASS__, $name));
+		}
         return $value;
 	}
 
@@ -82,13 +93,13 @@ class ServiceManager
 
 	public static function isExists($name) //查找资源是否存在
 	{
-		$result = self::get($name);
-		return !empty($result);
+		self::get($name);
+		return self::$_stu;
 	}
 
 	public static function clear() //清除全部资源
 	{
-		self::$_data = "";
+		self::$_data = array();
 		return empty(self::$_data);
 	}
 }

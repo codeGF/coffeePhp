@@ -3,9 +3,15 @@
 class Tm extends Model
 {
 
-    public function s()
+    public function __construct()
     {
-        $sql = "INSERT INTO `{$this->dbname_}` SET `id`=12311";
-        var_dump($this->pdo_()->query($sql));
+        parent::__construct();
+        ServiceManager::set("DBmanagementConn", $this->mysqli_(false));
+    }
+
+    public function s1()
+    {
+        $sql = "SELECT * FROM `{$this->tabname_}`";
+        $this->mysqli_()->query($sql);
     }
 }

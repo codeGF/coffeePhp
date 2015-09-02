@@ -15,7 +15,7 @@ class Hook extends Base
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_hookFile = ServiceManager::get("SYSTEMCONF@APP_HOOK_CONF");
+		$this->_hookFile = ServiceManager::get("SYSTEMCONF@APP_HOOK_CONF", true);
 		if (file_exists($this->_hookFile) == true)
 		{
 			$this->_hookConf = require_cache($this->_hookFile);
@@ -45,8 +45,8 @@ class Hook extends Base
 
 	private function _construct()
 	{
-		$this->_controller = strtolower(ServiceManager::get("router@appController"));
-		$this->_function = strtolower(ServiceManager::get("router@appFunction"));
+		$this->_controller = strtolower(ServiceManager::get("router@appController", true));
+		$this->_function = strtolower(ServiceManager::get("router@appFunction", true));
 		if (array_key_exists($this->_controller, $this->_hookConf["conf"]) == true)
 		{
 			if (!empty($this->_hookConf["conf"][$this->_controller]["__construct"]))

@@ -39,7 +39,11 @@ class OutPut extends Base
         }else if ($case == "str")
         {
             return $this->_str($tmpcode, $desc, $data);
+        }else if ($case == "serialize")
+        {
+            return $this->_serialize($tmpcode, $desc, $data);
         }
+        return;
     }
     
     public function location($title, $url=null, $data=array())
@@ -59,16 +63,23 @@ class OutPut extends Base
 
     private function _json($code, $desc, $data)
     {
+        System::header("Content-Type: application/json; charset=".$this->system_->encoding);
         System::quit(json_encode(array("code" => $code, "desc" => $desc, "data" => $data)));
     }
 
     private function _xml($code, $desc, $data)
     {
+        System::header("Content-Type: text/xml;charset=".$this->system_->encoding);
         System::quit($this->auto_->helpers->xml->create(array("code"=>$code, "desc"=>$desc, "data"=>$data)));
     }
 
     private function _str($code, $desc, $data)
     {
         System::quit(implode("", array("code"=>$code, "desc"=>$desc, "data"=>$data)));
+    }
+
+    private function _serialize($code, $desc, $data)
+    {
+        System::quit(serialize(array("code"=> $code, "desc"=> $desc, "data"=> $data)));
     }
 }

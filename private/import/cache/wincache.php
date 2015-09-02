@@ -13,7 +13,7 @@ class ExtWinCache
 
     private function _getWinKey($key)
     {
-        return System::hash($this->_conf["key"].$key);
+        return System::hash("{$this->_conf["key"]}{$key}");
     }
 
     private function _getWinVar($var)

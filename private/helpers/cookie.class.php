@@ -8,7 +8,7 @@ class Cookie
 
     public function __construct()
     {
-    	$this->_cookiek = ServiceManager::get("SYSTEMCONF@SYSTEM_COOKIE_K");
+    	$this->_cookiek = ServiceManager::get("SYSTEMCONF@SYSTEM_COOKIE_K", true);
     }
 
     private function _setKey($name)
@@ -21,7 +21,7 @@ class Cookie
     	$name = $this->_setKey($name);
         if (isset($_COOKIE[$name]))
         {
-            setcookie($name, "", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME")-3600*24);
+            setcookie($name, "", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true)-3600*24);
         }
         return setcookie($name, $value, $date, $path, "", "", true);
     }
@@ -42,7 +42,7 @@ class Cookie
         if (isset($_COOKIE[$name]))
         {
             unset($_COOKIE[$name]);
-            return setcookie($name, "", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME")-3600*24);
+            return setcookie($name, "", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true)-3600*24);
         }
         return true;
     }

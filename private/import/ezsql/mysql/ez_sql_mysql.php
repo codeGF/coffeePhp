@@ -86,7 +86,7 @@
 				$this->show_errors ? trigger_error($ezsql_mysql_str[1],E_USER_WARNING) : null;
 			}
 			// Try to establish the server database handle
-			else if ( ! $this->dbh = @mysql_connect($dbhost,$dbuser,$dbpassword,true,131074) )
+			else if ( ! $this->dbh = @mysql_connect($dbhost,$dbuser,$dbpassword,true,131074))
 			{
 				$this->register_error($ezsql_mysql_str[2].' in '.__FILE__.' on line '.__LINE__);
 				$this->show_errors ? trigger_error($ezsql_mysql_str[2],E_USER_WARNING) : null;
@@ -253,7 +253,7 @@
 			// If there is an error then take note of it..
 			if ( $str = @mysql_error($this->dbh) )
 			{
-				$this->register_error($str);
+				$this->register_error($str, mysql_errno());
 				$this->show_errors ? trigger_error($str,E_USER_WARNING) : null;
 				return false;
 			}

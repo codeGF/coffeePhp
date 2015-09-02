@@ -4,57 +4,47 @@
 /**
  * 数据库执行错误管理
  * @author changguofeng <changguofeng3@163.com>
- * @param stus 错误信息分类
- * @param _conn 数据连接资源
- * @param _ecode 错误代码执行方法
+ * @param msg 错误信息
  */
 
 class DBmanagEment extends Base
 {
 
-    public  static $stus = array();
-    private static $_baseconn = null;
-    private static $_basename = null;
-    private static $_dbname = null;
-    private static $_baseconf = array();
-    private static $_ecode = array
+    public  static $msg = array();
+    private static $_act = array
     (
-        "1146"=> "_createTable" //表不存在错误码：创建表
+        1146 => "createTable"
     );
 
-    public static function deal() //参数分析
+    public static function main() //开始分析错误
     {
-        $arr = explode(",", self::$stus["msg"]);
-        if (isset(self::$_ecode[trim($arr[1])]) == true)
+        if (empty(self::$msg["errno"]) == false)
         {
-            self::$_basename = ServiceManager::get("DBErrorManagementBasename");
-            self::$_baseconn = ServiceManager::get("DBErrorManagementBaseconn");
-            self::$_baseconf = ServiceManager::get("DBErrorManagementBaseconf");
-            self::$_dbname = ServiceManager::get("DBErrorManagementDbname");
-            $fun = self::$_ecode[trim($arr[1])];
-            self::$fun();
+            if (isset(self::$_act[self::$msg["errno"]]) == true)
+            {
+                $fun = self::$_act[self::$msg["errno"]];
+                self::$fun();
+            }
         }
         return;
     }
 
-    private static function _createTable()
+    private static function _conn() //获取一个数据连接资源
     {
-        if (self::_lock() == true)
-        {
-            $create = str_replace("{table}", self::$_dbname, self::$_baseconf["createTable"]);
-            self::$_baseconn->query($create);
-        }
-        return;
+        return ServiceManager::get("DBmanagementConn");
     }
 
-    private static function _lock()
+    public static function createTable() //创建表
     {
-        static $lock = array();
-        if (isset($lock[self::$_dbname]) == false)
+        $conf = ServiceManager::get("DBmanagementConf");
+        if ($conf != false && empty($conf["tabname"])==false && empty($conf["createTable"])==false)
         {
-            $lock[self::$_dbname] = true;
-            return true;
+            if (self::_conn() != false)
+            {
+                $sql = str_replace("{table}", $conf["tabname"], $conf["createTable"]);
+                self::_conn()->query($sql);
+            }
         }
-        return false;
+        return;
     }
 }

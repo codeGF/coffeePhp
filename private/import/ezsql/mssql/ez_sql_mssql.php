@@ -244,7 +244,7 @@
 
 				$sqlError = "ErrorCode: ".$errorCode." ### Error Severity: ".$errorSeverity." ### Error Message: ".$errorMessage." ### Query: ".$query;
 
-				$this->register_error($sqlError);
+				$this->register_error($sqlError, $errorCode);
 				$this->show_errors ? trigger_error($sqlError ,E_USER_WARNING) : null;
 				return false;
 			}

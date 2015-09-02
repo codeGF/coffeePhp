@@ -16,7 +16,7 @@ class PrivateException extends Exception
         $this->description = $description;
         if ($this->_errorCnt == null)
         {
-            $this->_errorCnt = file_get_contents(sprintf("%s/system/error.html", ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH")));
+            $this->_errorCnt = file_get_contents(sprintf("%s/system/error.html", ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH", true)));
         }
     }
 
@@ -24,16 +24,32 @@ class PrivateException extends Exception
     {
         if (is_array($array) == true)
         {
-            $error = ServiceManager::get("ERRORCODE@{$array["code"]}");
-            if ($error)
+            if (empty($array["code"]) == false)
             {
-                return str_replace('{e}', $array["message"], $error);
+                $array["code"] = trim($array["code"], "\r\n");
+                if (is_numeric($array["code"]) == true)
+                {
+                    $codeMessage = ServiceManager::get("ERRORCODE@{$array["code"]}", true);
+                    if (is_array($array["message"]) == true)
+                    {
+                        foreach ($array["message"] as $k => $v)
+                        {
+                            $codeMessage = str_replace("{{$k}}", $v, $codeMessage);
+                        }
+                        return $codeMessage;
+                    }
+                    return str_replace('{0}', $array["message"], $codeMessage);
+                }else
+                {
+                    return $array["code"];
+                }
             }else
             {
+                $array["message"] = trim($array["message"]);
                 return $array["message"];
             }
         }else
-       {
+        {
             return $array;
         }
     }
@@ -50,18 +66,16 @@ class PrivateException extends Exception
 
     public function show()
     {
-        $this->errorSystem_();
-        if (ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_PROMPT") == true)
+        $this->errorMsg_();
+        if (ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_PROMPT", true) == false)
         {
-            $this->errorSystem_();
-        }else
-       {
             $this->toEmail();
+            $this->errorFriendly_();
         }
-        die;
+        System::quit($this->_errorHtml);
     }
 
-    protected function errorSystem_()
+    protected function errorMsg_()
     {
         $list1 = null; $list2 = null;
         $list1 .= "<li>".htmlspecialchars($this->getMessage())."</li>";
@@ -86,8 +100,8 @@ class PrivateException extends Exception
 
     private function toEmail()
     {
-        require_cache(sprintf("%s/emailer/emailer.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH")));
-        $emailObj = new Emailer((array)ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_TO_EMAIL"), array("SYSTEM_RUN_ERROR", $this->_errorHtml), true);
+        require_cache(sprintf("%s/emailer/emailer.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true)));
+        $emailObj = new Emailer((array)ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_TO_EMAIL", true), array("SYSTEM_RUN_ERROR", $this->_errorHtml), true);
         $emailObj->email();
         return;
     }

@@ -91,10 +91,9 @@
 			(
 				'error_str' => $err_str,
 				'query'     => $this->last_query,
-				'errno'     => $errno,
-				'show_errors'=> $this->show_errors
+				'errno'     => $errno
 			);
-			DBmanagEment::$msg = $this->captured_errors[0]; //设置异常管理错误信息
+			DBmanagEment::$msg = array("errno"=> $errno, "error_str"=> $err_str, "query"=> $this->last_query); //设置异常管理错误信息
 			DBmanagEment::main();
 		}
 

@@ -11,11 +11,7 @@ class Tm extends Model
 
     public function s1()
     {
-        //$sql = "SELECT * FROM `{$this->tabname_}`";
-        for ($i=0; $i<=2; $i++)
-        {
-            $sql = $this->insertSql(array("id"=> time()));
-            $this->mysqli_()->query($sql);
-        }
+        $sql = "SELECT * FROM `{$this->tabname_}`";
+        $this->mysqli_()->query($sql);
     }
 }

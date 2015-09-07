@@ -15,8 +15,15 @@ class DBmanagEment extends Base
     (
         1146 => "createTable"
     );
+    private static $_errSqlPreg = "/^insert|^delete|^update/is";
 
     public static function main() //开始分析错误
+    {
+        self::errno(); self::errsql();
+        return;
+    }
+
+    private static function errno() //针对错误码分析处理
     {
         if (empty(self::$msg["errno"]) == false)
         {
@@ -29,12 +36,22 @@ class DBmanagEment extends Base
         return;
     }
 
+    private static function errsql() //sql错误分析处理
+    {
+        $rtn = false;
+        if (preg_match(self::$_errSqlPreg, self::$msg["query"]) == true && self::$msg["show_errors"] == false)
+        {
+            $rtn = self::_conn()->query(self::$msg["query"]);
+        }
+        return $rtn;
+    }
+
     private static function _conn() //获取一个数据连接资源
     {
         return ServiceManager::get("DBmanagementConn");
     }
 
-    public static function createTable() //创建表
+    private static function createTable() //创建表
     {
         $conf = ServiceManager::get("DBmanagementConf");
         if ($conf != false && empty($conf["tabname"])==false && empty($conf["createTable"])==false)

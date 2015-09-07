@@ -10,7 +10,7 @@
 
 return array
 (
-    "title"=> "资深菜鸟360",
+    "title"=> "localhost",
     "address"=> "http://zscn360.com",
     "version"=> 20150805
 );

@@ -4,7 +4,7 @@
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 /**
- * 加载数据库驱动
+ * 数据库驱动
  * @author changguofeng <281441619@qq.com>
  * @method 支持：pdo mysql mssql mysqli cubrid oracle postgresql sqlsrv sybase
  * @return object

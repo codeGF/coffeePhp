@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 class PrivateException extends Exception
@@ -16,7 +23,7 @@ class PrivateException extends Exception
         $this->description = $description;
         if ($this->_errorCnt == null)
         {
-            $this->_errorCnt = file_get_contents(sprintf("%s/system/error.html", ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH", true)));
+            $this->_errorCnt = file_get_contents(sprintf("%s/system/error.html", Pools::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH", true)));
         }
     }
 
@@ -29,7 +36,7 @@ class PrivateException extends Exception
                 $array["code"] = trim($array["code"], "\r\n");
                 if (is_numeric($array["code"]) == true)
                 {
-                    $codeMessage = ServiceManager::get("ERRORCODE@{$array["code"]}", true);
+                    $codeMessage = Pools::get("ERRORCODE@{$array["code"]}", true);
                     if (is_array($array["message"]) == true)
                     {
                         foreach ($array["message"] as $k => $v)
@@ -67,7 +74,7 @@ class PrivateException extends Exception
     public function show()
     {
         $this->errorMsg_();
-        if (ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_PROMPT", true) == false)
+        if (Pools::get("SYSTEMCONF@SYSTEM_ERROR_PROMPT", true) == false)
         {
             $this->toEmail();
             $this->errorFriendly_();
@@ -100,8 +107,8 @@ class PrivateException extends Exception
 
     private function toEmail()
     {
-        require_cache(sprintf("%s/emailer/emailer.class.php", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true)));
-        $emailObj = new Emailer((array)ServiceManager::get("SYSTEMCONF@SYSTEM_ERROR_TO_EMAIL", true), array("SYSTEM_RUN_ERROR", $this->_errorHtml), true);
+        require_cache(sprintf("%s/emailer/emailer.class.php", Pools::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true)));
+        $emailObj = new Emailer((array)Pools::get("SYSTEMCONF@SYSTEM_ERROR_TO_EMAIL", true), array("SYSTEM_RUN_ERROR", $this->_errorHtml), true);
         $emailObj->email();
         return;
     }

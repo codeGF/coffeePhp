@@ -17,5 +17,5 @@ $conf["slave"] = array
     "pdo"=> array("dsn"=> "mysql:host=127.0.0.1;port=3306;dbname=zscn360;charset=utf8;", "user"=> "root", "password"=> "root", "options"=> array(PDO::ATTR_TIMEOUT => 1)),
 );
 
-ServiceManager::set("DB_CONF", $conf); //注册配置信息
+Pools::set("DB_CONF", $conf); //注册配置信息
 unset($conf);

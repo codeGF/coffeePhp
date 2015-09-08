@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 $conf = array();
@@ -38,5 +45,5 @@ $conf[11140] = "{0}中没有找到您操作model的数据配置，请确认是�
 $conf[11141] = "您加载的配置文件不在系统允许加载范围内";
 $conf[11142] = "您在{0}中查找的{1}属性不存在";
 
-ServiceManager::set("ERRORCODE", $conf); //注册配置信息
+Pools::set("ERRORCODE", $conf); //注册配置信息
 unset($conf);

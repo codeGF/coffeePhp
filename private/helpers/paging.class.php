@@ -2,8 +2,10 @@
 
 
 /**
- * @date 2012-05-19
- * @author ChangGuofeng update
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
  * @access 分页类
  * @prompt 可对数组（一维、二维）和普通文本进行分页
  * @prompt 传参变量名默认为'page'

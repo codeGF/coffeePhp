@@ -18,7 +18,7 @@
  * $access = $emailer->email();
  */
 
-require_cache(sprintf("%s/emailer.php", ServiceManager::get("SYSTEMCONF@SYSTEM_CONF_PATH", true)));
+require_cache(sprintf("%s/emailer.php", Pools::get("SYSTEMCONF@SYSTEM_CONF_PATH", true)));
 import("emailer/class.phpmailer.php");
 
 class Emailer
@@ -39,7 +39,7 @@ class Emailer
 
 	public function __construct($emailer, $content, $format = null)
 	{
-		$conf = ServiceManager::get("MAIL_CONF", true);
+		$conf = Pools::get("MAIL_CONF", true);
 		$this->Host = $conf["MAIL_HOST"];
 		$this->SMTPAuth = $conf["MAIL_SMTPAUTH"];
 		$this->Username = $conf["MAIL_USERNAME"];

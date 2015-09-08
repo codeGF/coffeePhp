@@ -45,7 +45,7 @@ class Cache
     public function __construct(array $conf)
     {
         $this->_conf = $conf;
-        $this->_systemImportClassPath = ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true);
+        $this->_systemImportClassPath = Pools::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true);
         $this->main();
     }
 

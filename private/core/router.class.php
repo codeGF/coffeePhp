@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 class Router extends Base
@@ -16,7 +23,7 @@ class Router extends Base
     public function __construct()
     {
     	parent::__construct();
-    	$this->_apprunk = ServiceManager::get("SYSTEMCONF@SYSTEM_APP_RUN_K", true);
+    	$this->_apprunk = Pools::get("SYSTEMCONF@SYSTEM_APP_RUN_K", true);
     }
 
     private function _getRequest()
@@ -49,9 +56,9 @@ class Router extends Base
 		}
 		if (empty($this->_router[1]))
 		{
-			$this->_router[1] = ServiceManager::get("SYSTEMCONF@SYSTEM_APP_FUN_MAIN", true);
+			$this->_router[1] = Pools::get("SYSTEMCONF@SYSTEM_APP_FUN_MAIN", true);
 		}
-		ServiceManager::set("router", array("appController"=>$this->_router[0], "appFunction"=>$this->_router[1]));
+		Pools::set("router", array("appController"=>$this->_router[0], "appFunction"=>$this->_router[1]));
         $this->_appController = $this->_router[0];
         $this->_appFunction = $this->_router[1];
         return;
@@ -60,7 +67,7 @@ class Router extends Base
     private function _loadController()
     {
     	$result = false;
-    	$appFile = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_CONTROLLER_PATH", true), $this->_appController, ServiceManager::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
+    	$appFile = sprintf("%s/%s%s", Pools::get("SYSTEMCONF@APP_CONTROLLER_PATH", true), $this->_appController, Pools::get("SYSTEMCONF@SYSTEM_SUFFIX", true));
         if (file_exists($appFile))
         {
         	require $appFile;
@@ -82,7 +89,7 @@ class Router extends Base
 
     private function _registry()
     {
-    	$file = ServiceManager::get("SYSTEMCONF@APP_REGISTRY_CONF", true);
+    	$file = Pools::get("SYSTEMCONF@APP_REGISTRY_CONF", true);
     	if (file_exists($file))
     	{
     		$data = require_cache($file);

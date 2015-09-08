@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 class Upload extends Base
@@ -116,7 +123,7 @@ class Upload extends Base
 			foreach ($this->_files["name"] as $key => $value)
 			{
 				$filename = explode(".", $value);
-				$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), $filename[0])), $filename[1]);
+				$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", Pools::get("SYSTEMCONF@SYSTEM_TIME", true), $filename[0])), $filename[1]);
 				$tmparr["tmp_name"] = $this->_files["tmp_name"][$key];
 				$tmparr["original"] = $value;
 				$this->_rename[] = $tmparr;
@@ -124,7 +131,7 @@ class Upload extends Base
 		}else
        {
 			$filename = explode(".", $this->_files["name"]);
-			$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), $filename[0])), $filename[1]);
+			$tmparr["name"] = sprintf("%s.%s", System::hash(sprintf("%s@%s", Pools::get("SYSTEMCONF@SYSTEM_TIME", true), $filename[0])), $filename[1]);
 			$tmparr["tmp_name"] = $this->_files["tmp_name"];
 			$tmparr["originalName"] = $this->_files["name"];
 			$this->_rename[] = $tmparr;

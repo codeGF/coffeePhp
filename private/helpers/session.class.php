@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 class Session extends Base
@@ -10,8 +17,8 @@ class Session extends Base
 
     public function __construct()
     {
-    	$this->sessionk = ServiceManager::get("SYSTEMCONF@SYSTEM_SESSION_K", true);
-    	if (ServiceManager::get("SYSTEMCONF@APP_SESSION_LOCAL_DIST", true) == true)
+    	$this->sessionk = Pools::get("SYSTEMCONF@SYSTEM_SESSION_K", true);
+    	if (Pools::get("SYSTEMCONF@APP_SESSION_LOCAL_DIST", true) == true)
     	{
     		$this->_savePath();
     	}
@@ -73,7 +80,7 @@ class Session extends Base
 
     private function _savePath() //分布式session文件储存
     {
-    	$sessionPath = ServiceManager::get("SYSTEMCONF@APP_SESSION_PATH", true);
+    	$sessionPath = Pools::get("SYSTEMCONF@APP_SESSION_PATH", true);
     	if (file_exists($sessionPath) == false)
     	{
     		$dir = '123456789abcdefghijklmnopqrstuvwxyz';

@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 class Display
 {
 
@@ -21,9 +28,9 @@ class Display
 		$viewfile = sprintf
 		(
 				"%s/%s%s",
-				ServiceManager::get("SYSTEMCONF@APP_VIEW_PATH", true),
+				Pools::get("SYSTEMCONF@APP_VIEW_PATH", true),
 				$name,
-				ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_TEMPLATES", true)
+				Pools::get("SYSTEMCONF@SYSTEM_DISPLAY_TEMPLATES", true)
 		);
 		if (file_exists($viewfile))
 		{
@@ -38,7 +45,7 @@ class Display
 
 	public function tmpView($file)
 	{
-		$file = sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH", true), $file);
+		$file = sprintf("%s/%s", Pools::get("SYSTEMCONF@SYSTEM_DISPLAY_PATH", true), $file);
 		return require_cache($file);
 	}
 }

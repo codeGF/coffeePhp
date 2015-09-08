@@ -155,7 +155,7 @@ class Code extends Base
 
         $this->bgColor = $this->allBgColor[array_rand($this->allBgColor)];
         $this->fontColor = $this->allFontColor[array_rand($this->allFontColor)];
-        $this->fontDir = ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true).'/code/font/';
+        $this->fontDir = Pools::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true).'/code/font/';
         $this->font = $this->fontConfig[array_rand($this->fontConfig)];
 
         $min_angle = 7;

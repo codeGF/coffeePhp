@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 abstract class Controller extends Base
@@ -40,7 +47,7 @@ abstract class Controller extends Base
     
     final protected function layout_($file)
     {
-        $view = sprintf("%s/%s%s", ServiceManager::get("SYSTEMCONF@APP_LAYOUT_PATH", true), $file, ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME", true));
+        $view = sprintf("%s/%s%s", Pools::get("SYSTEMCONF@APP_LAYOUT_PATH", true), $file, Pools::get("SYSTEMCONF@APP_DISPLAY_NAME", true));
         if (file_exists($view) == true)
         {
             extract((array)$this->layout_);
@@ -57,10 +64,10 @@ abstract class Controller extends Base
 		$viewfile = sprintf
         (
             "%s/%s/%s%s",
-			ServiceManager::get("SYSTEMCONF@APP_VIEW_PATH", true),
-			ServiceManager::get("router@appController", true),
-			empty($name) ?  ServiceManager::get("router@appFunction", true) : $name,
-			ServiceManager::get("SYSTEMCONF@APP_DISPLAY_NAME", true)
+			Pools::get("SYSTEMCONF@APP_VIEW_PATH", true),
+			Pools::get("router@appController", true),
+			empty($name) ?  Pools::get("router@appFunction", true) : $name,
+			Pools::get("SYSTEMCONF@APP_DISPLAY_NAME", true)
 		);
 		if (file_exists($viewfile))
 		{

@@ -2,6 +2,10 @@
 
 
 /**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
  * @var  $string  明文字符串
  * @var  encide:加密, decode:解密
  * @var  $expiry  密码有效时间
@@ -46,7 +50,7 @@ class Authcode
 	//加密
 	public function en($string)
 	{
-		$string = trim(sprintf("%s-%d-%d", $string, ceil(bcadd(ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), $this->expiry)), $this->expiry));
+		$string = trim(sprintf("%s-%d-%d", $string, ceil(bcadd(Pools::get("SYSTEMCONF@SYSTEM_TIME", true), $this->expiry)), $this->expiry));
 		$char = mcrypt_encrypt($this->_cipher, $this->key, $string, $this->_modes, $this->_iv);
 		$char = base64_encode($char);
 		$result = $this->_charconen($char);
@@ -64,7 +68,7 @@ class Authcode
 		if (isset($tmp[2]) && isset($tmp[1]) && isset($tmp[0]))
 		{
 			$result = $tmp[0];
-			if ($tmp["2"] != 0 && ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true) > $tmp["1"])
+			if ($tmp["2"] != 0 && Pools::get("SYSTEMCONF@SYSTEM_TIME", true) > $tmp["1"])
 			{
 				$result = false;
 			}

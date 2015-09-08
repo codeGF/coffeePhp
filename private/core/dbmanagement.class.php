@@ -2,8 +2,11 @@
 
 
 /**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
  * 数据库执行错误管理
- * @author changguofeng <changguofeng3@163.com>
  * @param msg 错误信息
  */
 
@@ -48,12 +51,12 @@ class DBmanagEment extends Base
 
     private static function _conn() //获取一个数据连接资源
     {
-        return ServiceManager::get("DBmanagementConn");
+        return Pools::get("DBmanagementConn");
     }
 
     private static function createTable() //创建表
     {
-        $conf = ServiceManager::get("DBmanagementConf");
+        $conf = Pools::get("DBmanagementConf");
         if ($conf != false && empty($conf["tabname"])==false && empty($conf["createTable"])==false)
         {
             if (self::_conn() != false)

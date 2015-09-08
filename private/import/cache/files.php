@@ -28,7 +28,7 @@ class ExtFilesCache extends Base
 
     private function _addServer(array $server)
     {
-        $root = ServiceManager::get("SYSTEMCONF@APP_CACHE_PATH", true);
+        $root = Pools::get("SYSTEMCONF@APP_CACHE_PATH", true);
         foreach ($server as $v)
         {
             $path = sprintf("%s/%s", $root, System::hash($v));
@@ -47,7 +47,7 @@ class ExtFilesCache extends Base
         {
             $expire = 0;
         }else{
-            $expire = bcadd(ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true), (int)$expire);
+            $expire = bcadd(Pools::get("SYSTEMCONF@SYSTEM_TIME", true), (int)$expire);
         }
 		return $expire;
 	}
@@ -62,7 +62,7 @@ class ExtFilesCache extends Base
 	private function _getVar($var, $expire)
 	{
         $str = sprintf("<?php return array('setup'=>'%s', 'date'=>'%s', 'data'=>%s);",
-                ServiceManager::get("SYSTEMCONF@SYSTEM_TIME"),
+                Pools::get("SYSTEMCONF@SYSTEM_TIME"),
                 $this->_getExpire($expire),
                 var_export($var, true));
 		return $str;
@@ -86,7 +86,7 @@ class ExtFilesCache extends Base
 
 	public function set($key, $var, $expire=0)
 	{
-        $result = false; $root = ServiceManager::get("SYSTEMCONF@APP_CACHE_PATH", true);
+        $result = false; $root = Pools::get("SYSTEMCONF@APP_CACHE_PATH", true);
         static $files = array(); $files = $this->_conf["files"];
         static $i = 0; if ($i++ >= $this->_retyNum) return $result;
         foreach ($files as $k => $v)
@@ -115,7 +115,7 @@ class ExtFilesCache extends Base
 	{
         $result = array(); static $files = array(); $files = $this->_conf["files"];
         static $i = 0; if ($i++ >= $this->_retyNum) return $result;
-        $root = ServiceManager::get("SYSTEMCONF@APP_CACHE_PATH");
+        $root = Pools::get("SYSTEMCONF@APP_CACHE_PATH");
         foreach ($files as $k => $v)
         {
             $filepath = sprintf("%s/%s/%s.php", $root, System::hash($v), $this->_getFilesKey($v.$key));
@@ -131,7 +131,7 @@ class ExtFilesCache extends Base
                     fclose($fp);
                     if ($data["date"] != 0)
                     {
-                        if ($data["date"] > ServiceManager::get("SYSTEMCONF@SYSTEM_TIME", true))
+                        if ($data["date"] > Pools::get("SYSTEMCONF@SYSTEM_TIME", true))
                         {
                             $result = $data["data"];
                         }else{
@@ -156,7 +156,7 @@ class ExtFilesCache extends Base
 	public function delete($key)
 	{
         static $i = 0; if ($i++ >= $this->_retyNum) return;
-	    $root = ServiceManager::get("SYSTEMCONF@APP_CACHE_PATH", true);
+	    $root = Pools::get("SYSTEMCONF@APP_CACHE_PATH", true);
         static $files = array(); $files = $this->_conf["files"];
         foreach ($files as $k => $v)
         {
@@ -182,7 +182,7 @@ class ExtFilesCache extends Base
 
 	public function clean()
 	{
-	    $root = ServiceManager::get("SYSTEMCONF@APP_CACHE_PATH", true);
+	    $root = Pools::get("SYSTEMCONF@APP_CACHE_PATH", true);
         foreach ($this->_conf["files"] as $v)
         {
             $this->auto_->helpers->dir->delete_folder(sprintf("%s/%s", $root, System::hash($v)));

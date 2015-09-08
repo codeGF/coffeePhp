@@ -23,5 +23,5 @@ $conf["files"] = array
 
 $conf["memcache"] = array(array("127.0.0.1", "11211"));
 
-ServiceManager::set("CACHE_CONF", $conf); //注册配置信息
+Pools::set("CACHE_CONF", $conf); //注册配置信息
 unset($conf);

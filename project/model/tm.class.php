@@ -6,7 +6,7 @@ class Tm extends Model
     public function __construct()
     {
         parent::__construct();
-        ServiceManager::set("DBmanagementConn", $this->mysqli_(false));
+        Pools::set("DBmanagementConn", $this->mysqli_(false));
     }
 
     public function s1()

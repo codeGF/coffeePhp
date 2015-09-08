@@ -1,27 +1,34 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 function import($name) //加载import类 import("xxx/xxx.php")
 {
-    return require_cache(sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@SYSTEM_IMPORT_PATH"), $name));
+    return require_cache(sprintf("%s/%s", Pools::get("SYSTEMCONF@SYSTEM_IMPORT_PATH"), $name));
 }
 
 function helpers($name) //加载助手类 helpers("xxx.php")
 {
-    return require_cache(sprintf("%s/%s", ServiceManager::get("SYSTEMCONF@SYSTEM_HELPERS_PATH"), $name));
+    return require_cache(sprintf("%s/%s", Pools::get("SYSTEMCONF@SYSTEM_HELPERS_PATH"), $name));
 }
 
 function require_cache($filename) //防止重复加载文件
 {
-	$result = ServiceManager::get($filename);
+	$result = Pools::get($filename);
 	if ($result == false)
 	{
 		if (file_exists($filename))
 		{
 			$result = require($filename);
-			ServiceManager::set($filename, $result);
+			Pools::set($filename, $result);
 		}else
 		{
 		    throw new PrivateException(array("message"=> $filename, "code"=> 11128));

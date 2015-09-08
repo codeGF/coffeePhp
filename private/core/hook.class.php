@@ -1,6 +1,13 @@
 <?php
 
 
+/**
+ * Created by PhpStorm.
+ * author: changguofeng <changguofeng3@163.com>.
+ * createTime: 2015/9/8 14:14
+ * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
+ */
+
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 class Hook extends Base
@@ -15,7 +22,7 @@ class Hook extends Base
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_hookFile = ServiceManager::get("SYSTEMCONF@APP_HOOK_CONF", true);
+		$this->_hookFile = Pools::get("SYSTEMCONF@APP_HOOK_CONF", true);
 		if (file_exists($this->_hookFile) == true)
 		{
 			$this->_hookConf = require_cache($this->_hookFile);
@@ -40,13 +47,13 @@ class Hook extends Base
 			}
 			$tmp = trim($tmp, ",");
 		}
-		return eval(sprintf("%s(%s);", $str, $tmp));
+		return eval(sprintf("%s(%s);", $str, $tmp)); //钩子机制用到的eval，请放心使用，不存在后门漏洞
 	}
 
 	private function _construct()
 	{
-		$this->_controller = strtolower(ServiceManager::get("router@appController", true));
-		$this->_function = strtolower(ServiceManager::get("router@appFunction", true));
+		$this->_controller = strtolower(Pools::get("router@appController", true));
+		$this->_function = strtolower(Pools::get("router@appFunction", true));
 		if (array_key_exists($this->_controller, $this->_hookConf["conf"]) == true)
 		{
 			if (!empty($this->_hookConf["conf"][$this->_controller]["__construct"]))

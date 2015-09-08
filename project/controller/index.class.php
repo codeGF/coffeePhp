@@ -26,7 +26,6 @@ class Index extends Controller
      */
     public function main()
     {
-        $this->auto_->model->tm->s1();
         $this->display_();
     }
 

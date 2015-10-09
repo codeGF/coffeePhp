@@ -5,19 +5,19 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
 
 ob_start();
 
 defined("SYSTEM_ROUTER_RUN") or define('SYSTEM_ROUTER_RUN', true);
 defined("ROOT") or define("ROOT", dirname(__FILE__));
-defined("DEBUG") or define("DEBUG", 0);
+defined("DEBUG") or define("DEBUG", E_ALL);
+defined("SEND_HEADER") or define("SEND_HEADER", true);
 defined("SYSTEM_APP_RUN_K") or define("SYSTEM_APP_RUN_K", "act");
-defined("SYSTEM_MAX_EXECUTION_TIME") or define("SYSTEM_MAX_EXECUTION_TIME", 30);
 
 require sprintf("%s/core/system.class.php", ROOT);
-require sprintf("%s/core/pools.class.php", ROOT);
+require sprintf("%s/core/Pools.class.php", ROOT);
 require sprintf("%s/%s", ROOT, "conf/ini.php");
 require sprintf("%s/core/compile.class.php", ROOT);
 

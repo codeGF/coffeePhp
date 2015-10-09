@@ -5,17 +5,19 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
+
 class FileStorage extends Base
 {
-
-
+    
+    
     private $_contents = array();
 
     public function save($fileName, $content)
     {
-        if (file_put_contents($fileName, $content) === false) {
+        if (file_put_contents($fileName, $content) === false)
+        {
             System::error(11138, $fileName);
         }
         $this->_contents[$fileName] = $content;
@@ -24,10 +26,12 @@ class FileStorage extends Base
 
     public function get($fileName)
     {
-        if (isset($this->_contents[$fileName])) {
+        if (isset($this->_contents[$fileName]))
+        {
             return $this->_contents[$fileName];
         }
-        if (!is_file($fileName)) {
+        if (!is_file($fileName))
+        {
             return false;
         }
         $content = file_get_contents($fileName);

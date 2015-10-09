@@ -5,21 +5,20 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
 
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 abstract class Model extends DataDriven
 {
-
-    public $tabname = null; //è¡¨åç§°
-    public $sqlConf = array(); //sqlé…ç½®
-    protected $confPath_ = null; //sqlé…ç½®è·¯å¾„
-
+    
+    protected $tabname_ = null;
+    
     public function __construct()
     {
         parent::__construct();
-        if ($this->confPath_ != null) $this->sqlConf = $this->auto->config->{$this->confPath_};
+        $this->tabname_ = $this->auto_->model->tabname;
     }
 
     /**
@@ -27,17 +26,17 @@ abstract class Model extends DataDriven
      * @param array where ["faccount"=>"", "key3"=>array(1, 2, 3) ...]
      * @return string
      */
-    final public function selectSql($term = "", $where = "", $order = "", $limit = "", $group = "")
+    final public function selectSql($term="", $where="", $order="", $limit="")
     {
-        $sql = trim(sprintf(
-            "SELECT %s FROM `%s` %s %s %s %s",
-            $this->auto->helpers->sqlstatement->term($term),
-            $this->tabname,
-            $this->auto->helpers->sqlstatement->where($where),
-            $this->auto->helpers->sqlstatement->group($group),
-            $this->auto->helpers->sqlstatement->order($order),
-            $this->auto->helpers->sqlstatement->limit($limit)
-        ));
+        $sql = sprintf
+        (
+        		"SELECT %s FROM `%s` %s %s %s",
+                $this->auto_->helpers->sqlstatement->term($term),
+                $this->tabname_,
+                $this->auto_->helpers->sqlstatement->where($where),
+        		$this->auto_->helpers->sqlstatement->order($order),
+                $this->auto_->helpers->sqlstatement->limit($limit)
+        );
         return $sql;
     }
 
@@ -47,11 +46,12 @@ abstract class Model extends DataDriven
      */
     final public function insertSql($data)
     {
-        $sql = trim(sprintf(
-            "INSERT INTO `%s` SET %s",
-            $this->tabname,
-            $this->auto->helpers->sqlstatement->insertValue($data)
-        ));
+        $sql = sprintf
+        (
+        		"INSERT INTO `%s` SET %s",
+        		$this->tabname_,
+        		$this->auto_->helpers->sqlstatement->insertValue($data)
+        );
         return $sql;
     }
 
@@ -61,15 +61,16 @@ abstract class Model extends DataDriven
      * @param array string limit [1, 10] || 10
      * @return string
      */
-    final public function updateSql($data, $where = "", $limit = "")
+    final public function updateSql($data, $where="", $limit="")
     {
-        $sql = trim(sprintf(
-            "UPDATE `%s` SET %s %s %s",
-            $this->tabname,
-            $this->auto->helpers->sqlstatement->insertValue($data),
-            $this->auto->helpers->sqlstatement->where($where),
-            $this->auto->helpers->sqlstatement->limit($limit)
-        ));
+        $sql = sprintf
+        (
+        		"UPDATE `%s` SET %s %s %s",
+                $this->tabname_,
+                $this->auto_->helpers->sqlstatement->insertValue($data),
+                $this->auto_->helpers->sqlstatement->where($where),
+        		$this->auto_->helpers->sqlstatement->limit($limit)
+        );
         return $sql;
     }
 
@@ -80,12 +81,13 @@ abstract class Model extends DataDriven
      */
     final public function deleteSql($where, $limit)
     {
-        $sql = trim(sprintf(
-            "DELETE FROM `%s` %s %s",
-            $this->tabname,
-            $this->auto->helpers->sqlstatement->where($where),
-            $this->auto->helpers->sqlstatement->limit($limit)
-        ));
+        $sql = sprintf
+        (
+        		"DELETE FROM `%s` %s %s",
+        		$this->tabname_,
+        		$this->auto_->helpers->sqlstatement->where($where),
+        		$this->auto_->helpers->sqlstatement->limit($limit)
+        );
         return $sql;
     }
 }

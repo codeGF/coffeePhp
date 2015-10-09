@@ -21,28 +21,30 @@ class ExtWinCache
         return serialize($var);
     }
 
-    public function add($key, $var, $expire = "")
+    public function add($key, $var, $expire="")
     {
-        return wincache_ucache_add(
-            $this->_getWinKey($key),
-            $this->_getWinVar($var),
-            $expire ? $expire : $this->_conf["expire"]
+        return wincache_ucache_add
+        (
+        		$this->_getWinKey($key),
+        		$this->_getWinVar($var),
+        		$expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function set($key, $var, $expire = "")
+    public function set($key, $var, $expire="")
     {
-        return wincache_ucache_set(
-            $this->_getWinKey($key),
-            $this->_getWinVar($var),
-            $expire ? $expire : $this->_conf["expire"]
+        return wincache_ucache_set
+        (
+        		$this->_getWinKey($key),
+        		$this->_getWinVar($var),
+        		$expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function replace($key, $var, $expire = "")
+    public function replace($key, $var, $expire="")
     {
-        $this->delete($key);
-        return $this->set($key, $var, $expire);
+    	$this->delete($key);
+    	return $this->set($key, $var, $expire);
     }
 
     public function get($key)

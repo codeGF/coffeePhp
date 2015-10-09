@@ -16,36 +16,45 @@
  * @method _xml 输出xml文本
  * @method _str 输出普通字符串
  */
+
 class OutPut extends Base
 {
 
-    public function set($code = "", $desc = "", $data = "", $case = "json")
+    public function set($code = "", $desc = "", $data = "", $case="json")
     {
         $tmpcode = empty($code) || $code === false ? "error" : "success";
-        if (is_array($desc)) {
-            $desc = $tmpcode == "success" ? $desc[0] : $desc[1];
+        if (is_array($desc))
+        {
+        	$desc = $tmpcode == "success" ? $desc[0] : $desc[1];
         }
-        if (empty($code) || $code === false) {
-            $data = false;
+        if (empty($code) || $code === false)
+        {
+        	$data = false;
         }
-        if ($case == "json") {
+        if ($case == "json")
+        {
             return $this->_json($tmpcode, $desc, $data);
-        } else if ($case == "xml") {
+        }else if ($case == "xml")
+        {
             return $this->_xml($tmpcode, $desc, $data);
-        } else if ($case == "str") {
+        }else if ($case == "str")
+        {
             return $this->_str($tmpcode, $desc, $data);
-        } else if ($case == "serialize") {
+        }else if ($case == "serialize")
+        {
             return $this->_serialize($tmpcode, $desc, $data);
         }
         return;
     }
-
-    public function location($title, $url = null, $data = array())
+    
+    public function location($title, $url=null, $data=array())
     {
         $js = "alert('{$title}');";
-        if ($url != null) {
+        if ($url != null)
+        {
             $js .= "window.location.href = {$url}&";
-            if (!empty($data)) {
+            if (!empty($data))
+            {
                 $js .= http_build_query($data);
             }
         }
@@ -55,23 +64,23 @@ class OutPut extends Base
 
     private function _json($code, $desc, $data)
     {
-        System::header("Content-Type: application/json; charset=" . $this->system->encoding);
+        System::header("Content-Type: application/json; charset=".$this->system_->encoding);
         System::quit(json_encode(array("code" => $code, "desc" => $desc, "data" => $data)));
     }
 
     private function _xml($code, $desc, $data)
     {
-        System::header("Content-Type: text/xml;charset=" . $this->system->encoding);
-        System::quit($this->auto->helpers->xml->create(array("code" => $code, "desc" => $desc, "data" => $data)));
+        System::header("Content-Type: text/xml;charset=".$this->system_->encoding);
+        System::quit($this->auto_->helpers->xml->create(array("code"=>$code, "desc"=>$desc, "data"=>$data)));
     }
 
     private function _str($code, $desc, $data)
     {
-        System::quit(implode("", array("code" => $code, "desc" => $desc, "data" => $data)));
+        System::quit(implode("", array("code"=>$code, "desc"=>$desc, "data"=>$data)));
     }
 
     private function _serialize($code, $desc, $data)
     {
-        System::quit(serialize(array("code" => $code, "desc" => $desc, "data" => $data)));
+        System::quit(serialize(array("code"=> $code, "desc"=> $desc, "data"=> $data)));
     }
 }

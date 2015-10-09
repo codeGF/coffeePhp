@@ -5,110 +5,115 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
+
 class SqlStatement
 {
 
-    //@var term bool ""
-    //@var term array array("a", "b", "c"...)
-    //@var term char "a"
-    public function term($term = "")
-    {
-        if (empty($term) == false){
-            if (is_array($term) == true){
-                $tmp = "";
-                foreach ($term as $v) {
-                    $tmp .= sprintf("`%s`,", $v);
-                }
-                $term = trim($tmp, ",");
-            }
-        }else{
-            $term = "*";
-        }
-        return $term;
-    }
+	public function term($term="")
+	{
+		if (!$term)
+		{
+			$term = "*";
+		}else if (is_array($term))
+        {
+			$tmp = "";
+			foreach ($term as $v)
+			{
+				$tmp .= sprintf("`%s`,", $v);
+			}
+			$term = trim($tmp, ",");
+		}
+		return $term;
+	}
 
-    //@var data array array("a"=>"b", "b"=>"c"...)
-    public function where($data)
-    {
-        if (empty($data) == false) {
-            $tmp = " WHERE "; //char
-            if (is_array($data)) {
-                foreach ($data as $k => $v) {
-                    if (is_array($v)) {
-                        $or = "(";
-                        foreach ($v as $vv) {
-                            $tmp .= sprintf("%s`%s`='%s' OR ", $or, $k, $vv);
-                            $or = "";
-                        }
-                        $tmp = sprintf("%s) AND ", trim($tmp, "OR "));
-                    } else {
-                        $tmp .= sprintf("`%s`='%s' AND ", $k, $v);
-                    }
-                }
-                $tmp = trim($tmp, "AND ");
-                $tmp = count($data, true) > 2 ? $tmp : str_replace(array("(", ")"), "", $tmp);
-            } else {
-                $tmp .= sprintf("%s ", $data);
-            }
-            return $tmp;
-        }
-        return false;
-    }
+	public function where($data)
+	{
+		if ($data)
+		{
+			$tmp = " WHERE "; //char
+			if (is_array($data))
+			{
+				foreach ($data as $k => $v)
+				{
+					if (is_array($v))
+					{
+						$or = "(";
+						foreach ($v as $vv)
+						{
+							$tmp .= sprintf("%s`%s`='%s' OR ", $or, $k, $vv);
+							$or = "";
+						}
+						$tmp = sprintf("%s) AND ", trim($tmp, "OR "));
+					}else
+					{
+						$tmp .= sprintf("`%s`='%s' AND ", $k, $v);
+					}
+				}
+				$tmp = trim($tmp, "AND ");
+				$tmp = count($data, true) > 2 ? $tmp : str_replace(array("(", ")"), "", $tmp);
+			}else
+			{
+				$tmp .= sprintf("%s ", $data);
+			}
+			return $tmp;
+		}
+		return false;
+	}
 
-    //@var data array array("a"=>"n", "b"=>"n"...)
-    public function insertValue(array $data)
-    {
-        if (empty($data) == false){
-            $tmp = "";
-            foreach ($data as $k => $v) {
-                $tmp .= "`$k`='$v',";
-            }
-            return trim($tmp, ",");
-        }
-        return null;
-    }
+	public function insertValue($data)
+	{
+		$tmp = "";
+		foreach ($data as $k => $v)
+		{
+			$tmp .= "`$k`='$v',";
+		}
+		return trim($tmp, ",");
+	}
 
-    //@var data array array(1, 15)
-    //@var data int 15
-    //@var data char "1,15"
-    public function limit($data)
-    {
-        if (empty($data) == false){
-            if (is_array($data)) {
-                return " LIMIT " . implode(",", $data) . " ";
-            } else if (!empty($data)) {
-                return " LIMIT {$data}";
-            }
-        }
-        return null;
-    }
+	public function limit($data)
+	{
+		if (is_array($data))
+		{
+			return " LIMIT ".implode(",", $data)." ";
+		}else if (!empty($data))
+        {
+			return " LIMIT {$data}";
+		}
+		return "";
+	}
 
-    //@var order array array("desc"=> array("id", "time"...))
-    //@var order array array("desc"=> "id")
-    public function order($order = array())
-    {
-        if (empty($order) == false){
-            $value = array_keys($order);
-            $key = trim(implode(",", array_values($order)), ",");
-            return " ORDER BY {$key} {$value[0]}";
-        }
-        return false;
-    }
+	public function order($order="")
+	{
+		if (isset($order[0]) && isset($order[1]))
+		{
+			if (is_array($order[0]))
+			{
+				$key = trim(implode(",", $order[0]), ",");
+			}else
+			{
+				$key = $order[0];
+			}
+			$eqe = strtoupper($order[1]);
+			return " ORDER BY {$key} {$eqe}";
+		}
+		return false;
+	}
 
-    //@var group array array("id", "name"....)
-    //@var group char "id, name..."
-    public function group($group = "")
-    {
-        if (empty($group) == false) {
-            if (is_array($group)) {
-                $key = trim(implode(",", $group), ",");
-            } else {
-                $key = $group;
-            }
-            return " GROUP BY {$key}";
-        }
-        return false;
-    }
+	public function group($group="")
+	{
+		if ($group)
+		{
+			if (is_array($group))
+			{
+				$key = trim(implode(",", $group), ",");
+			}else
+			{
+				$key = $group;
+			}
+			return " GROUP BY {$key}";
+		}
+		return false;
+	}
 }

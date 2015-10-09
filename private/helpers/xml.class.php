@@ -7,6 +7,7 @@
  * createTime: 2015/9/8 14:14
  * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
  */
+
 class Xml
 {
 
@@ -27,9 +28,9 @@ class Xml
 
     /**
      * 创建xml文件
-     * @param array $data 数据
-     * @param string $root 根据节点
-     * @param string $encoding 编码
+     * @param array $data       数据
+     * @param string $root      根据节点
+     * @param string $encoding  编码
      * @return string           XML字符串
      */
     public function create($data, $root = null, $encoding = "UTF-8")
@@ -45,18 +46,23 @@ class Xml
 
     private function _formatXml($data)
     {
-        if (is_object($data)) {
+        if (is_object($data))
+        {
             $data = get_object_vars($data);
         }
         $xml = '';
-        foreach ($data as $k => $v) {
-            if (is_numeric($k)) {
+        foreach ($data as $k => $v)
+        {
+            if (is_numeric($k))
+            {
                 $k = "item id=\"$k\"";
             }
             $xml .= "<$k>";
-            if (is_object($v) || is_array($v)) {
+            if (is_object($v) || is_array($v))
+            {
                 $xml .= $this->_formatXml($v);
-            } else {
+            }else
+            {
                 $xml .= str_replace(array("&", "<", ">", "\"", "'", "-"), array("&amp;", "&lt;", "&gt;", "&quot;", "&apos;", "&#45;"), $v);
             }
             list($k) = explode(" ", $k);
@@ -67,7 +73,7 @@ class Xml
 
     /**
      * 将XML字符串或文件转为数组
-     * @param string $xml XML字符串或XML文件
+     * @param string $xml   XML字符串或XML文件
      * @return array        解析后的数组
      */
     public function toArray($xml)
@@ -79,17 +85,19 @@ class Xml
 
     /**
      * 解析编译后的内容为数组
-     * @param array $arrData 数组数据
+     * @param array $arrData     数组数据
      * @param int $i 层级
      * @return array    数组
      */
     private function getData($arrData, &$i)
     {
         $data = array();
-        for ($i = $i; $i < count($arrData); $i++) {
+        for ($i = $i; $i < count($arrData); $i++)
+        {
             $name = $arrData[$i]['tag'];
             $type = $arrData[$i]['type'];
-            switch ($type) {
+            switch ($type)
+            {
                 case "attributes":
                     $data[$name]['att'][] = $arrData[$i]['attributes'];
                     break;

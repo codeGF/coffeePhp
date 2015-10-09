@@ -5,7 +5,7 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
 
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
@@ -13,12 +13,12 @@
 class Thread extends Base
 {
 
-    public function start($url, $data = array(), $proxy = null)
+    public function start($url, $data=array(), $proxy=null)
     {
-        $this->auto->helpers->curl->timeout = 1;
-        $this->auto->helpers->curl->connecttimeout = 15;
-        $this->auto->helpers->curl->proxy = $proxy;
-        $result = $this->auto->helpers->curl->post($url, $data);
+        $this->auto_->helpers->curl->timeout = 1;
+        $this->auto_->helpers->curl->connecttimeout = 15;
+        $this->auto_->helpers->curl->proxy = $proxy;
+        $result = $this->auto_->helpers->curl->post($url, $data);
         return $result;
     }
 }

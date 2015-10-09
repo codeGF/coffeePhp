@@ -5,8 +5,9 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
+
 class Request extends Base
 {
 
@@ -14,9 +15,11 @@ class Request extends Base
     {
         global $$name;
         $$name = false;
-        if (isset($$name) == false) {
-            $value = $this->auto->helpers->postget->$name;
-            if (strlen($value) > 0) {
+        if (isset($$name) == false)
+        {
+            $value = $this->auto_->helpers->postget->$name;
+            if (strlen($value) > 0)
+            {
                 $$name = $value;
             }
         }

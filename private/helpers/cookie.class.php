@@ -5,8 +5,9 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
+
 class Cookie
 {
 
@@ -14,27 +15,29 @@ class Cookie
 
     public function __construct()
     {
-        $this->_cookiek = Pools::get("SYSTEMCONF@SYSTEM_COOKIE_K", true);
+    	$this->_cookiek = Pools::get("SYSTEMCONF@SYSTEM_COOKIE_K", true);
     }
 
     private function _setKey($name)
     {
-        return System::hash(sprintf("%s@%s", $this->_cookiek, $name));
+    	return System::hash(sprintf("%s@%s", $this->_cookiek, $name));
     }
 
-    public function set($name, $value, $date = 0, $path = "")
+    public function set($name, $value, $date=0, $path="")
     {
-        $name = $this->_setKey($name);
-        if (isset($_COOKIE[$name])) {
-            setcookie($name, "", Pools::get("SYSTEMCONF@SYSTEM_TIME", true) - 3600 * 24);
+    	$name = $this->_setKey($name);
+        if (isset($_COOKIE[$name]))
+        {
+            setcookie($name, "", Pools::get("SYSTEMCONF@SYSTEM_TIME", true)-3600*24);
         }
         return setcookie($name, $value, $date, $path, "", "", true);
     }
 
     public function get($name)
     {
-        $name = $this->_setKey($name);
-        if (isset($_COOKIE[$name])) {
+    	$name = $this->_setKey($name);
+    	if (isset($_COOKIE[$name]))
+        {
             return $_COOKIE[$name];
         }
         return false;
@@ -42,10 +45,11 @@ class Cookie
 
     public function delete($name)
     {
-        $name = $this->_setKey($name);
-        if (isset($_COOKIE[$name])) {
+    	$name = $this->_setKey($name);
+        if (isset($_COOKIE[$name]))
+        {
             unset($_COOKIE[$name]);
-            return setcookie($name, "", Pools::get("SYSTEMCONF@SYSTEM_TIME", true) - 3600 * 24);
+            return setcookie($name, "", Pools::get("SYSTEMCONF@SYSTEM_TIME", true)-3600*24);
         }
         return true;
     }

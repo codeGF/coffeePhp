@@ -7,14 +7,15 @@
  * createTime: 2015/9/8 14:14
  * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
  */
+
 class PtdCurl
 {
 
     public $proxy = ""; //代理服务器
     private $_responses = array();
     private $_queue, $_ch, $_url;
-    public $timeout = 30; //设置cURL允许执行的最长秒数
-    public $connecttimeout = 10; //在发起连接前等待的时间(秒)，如果设置为0，则无限等待
+    public  $timeout = 30; //设置cURL允许执行的最长秒数
+    public  $connecttimeout = 10; //在发起连接前等待的时间(秒)，如果设置为0，则无限等待
 
     public function __construct()
     {
@@ -26,7 +27,8 @@ class PtdCurl
      */
     public function fileGetContents(array $url)
     {
-        foreach ($url as $value) {
+        foreach ($url as $value)
+        {
             $this->_url = $value;
             $this->_init();
         }
@@ -35,13 +37,14 @@ class PtdCurl
 
     /**
      * @param $data array(
-     * array("url"=>"xxxxxx", "data"=>array("xxx"=>"xxx"...))
-     * ...
-     * )
+           array("url"=>"xxxxxx", "data"=>array("xxx"=>"xxx"...))
+           ...
+       )
      */
     public function post(array $data)
     {
-        foreach ($data as $value) {
+        foreach ($data as $value)
+        {
             $this->_url = $value["url"];
             $this->_init();
             curl_setopt($this->_ch, CURLOPT_POST, true);
@@ -52,13 +55,14 @@ class PtdCurl
 
     /**
      * @param array $data array(
-     * array("url"=>"xxx", "data"=>array("xxx"=>"xxx"...))
-     * ...
-     * )
+           array("url"=>"xxx", "data"=>array("xxx"=>"xxx"...))
+           ...
+       )
      */
     public function get(array $data)
     {
-        foreach ($data as $value) {
+        foreach ($data as $value)
+        {
             $this->_url = sprintf("%s?%s", trim($value["url"], "?"), http_build_query($value["data"]));
             $this->_init();
             curl_setopt($this->_ch, CURLOPT_BINARYTRANSFER, true);
@@ -84,14 +88,15 @@ class PtdCurl
         $this->_ch = curl_init();
         curl_setopt($this->_ch, CURLOPT_URL, $this->formatUrl());
         curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->_ch, CURLOPT_TIMEOUT, $this->timeout);
+		curl_setopt($this->_ch, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($this->_ch, CURLOPT_NOSIGNAL, true);
         curl_setopt($this->_ch, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
         curl_setopt($this->_ch, CURLOPT_HEADER, false);
         curl_setopt($this->_ch, CURLOPT_HTTPHEADER, $this->httpHeader());
         curl_setopt($this->_ch, CURLOPT_USERAGENT, $this->userAgent());
         curl_multi_add_handle($this->_queue, $this->_ch);
-        if ($this->proxy) {
+        if ($this->proxy)
+        {
             curl_setopt($this->_ch, CURLOPT_PROXY, $this->proxy);
         }
     }
@@ -99,22 +104,25 @@ class PtdCurl
     private function _results()
     {
         do {
-            while (($code = curl_multi_exec($this->_queue, $active)) == CURLM_CALL_MULTI_PERFORM) ;
-            if ($code != CURLM_OK) {
+            while (($code = curl_multi_exec($this->_queue, $active)) == CURLM_CALL_MULTI_PERFORM);
+            if ($code != CURLM_OK)
+            {
                 break;
             }
-            while ($done = curl_multi_info_read($this->_queue)) {
+            while ($done = curl_multi_info_read($this->_queue))
+            {
                 $info = curl_getinfo($done['handle']);
                 $this->responses[] = array(
-                    "data" => curl_multi_getcontent($done['handle']),
-                    "info" => $info,
-                    "error" => curl_error($done['handle']),
-                    "runtime" => $this->isTimeOut($info["connect_time"], $info["total_time"]) //所消耗时间
+                    "data"=>curl_multi_getcontent($done['handle']),
+                    "info"=>$info,
+                    "error"=>curl_error($done['handle']),
+                    "runtime"=>$this->isTimeOut($info["connect_time"], $info["total_time"]) //所消耗时间
                 );
                 curl_multi_remove_handle($this->_queue, $done['handle']);
                 curl_close($done['handle']);
             }
-            if ($active > 0) {
+            if ($active > 0)
+            {
                 curl_multi_select($this->_queue, 0.5);
             }
         } while ($active);
@@ -126,11 +134,14 @@ class PtdCurl
     private function _isTimeOut($connectTime, $totalTime)
     {
         $result = "";
-        if ($connectTime > $this->connecttimeout) {
+        if ($connectTime > $this->connecttimeout)
+        {
             $result = "CONNECTTIMEOUT";
-        } else if ($totalTime > $this->timeout) {
+        }else if ($totalTime > $this->timeout)
+        {
             $result = "TIMEOUT";
-        } else {
+        }else
+        {
             $result = $totalTime;
         }
         return $result;

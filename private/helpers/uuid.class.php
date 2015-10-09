@@ -5,20 +5,22 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
+
 class Uuid
 {
 
-    public function get($len = 6, $char = "")
-    {
-        $chars = $char ? $char : "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxyz1234567890~!@#%^&*()_+";
-        mt_srand((double)microtime() * 1000000 * getmypid());
-        $uuid = "";
-        --$len;
-        while (strlen($uuid) <= $len) {
-            $uuid .= substr($chars, (mt_rand() % strlen($chars)), 1);
-        }
-        return $uuid;
-    }
+	public function get($len = 6, $char = "")
+	{
+		$chars = $char ? $char : "ABCDEFGHIJKLMNOPQRSTUVWXY1234567890";
+		mt_srand((double)microtime()*1000000*getmypid());
+		$uuid = "";
+		--$len;
+		while (strlen($uuid) <= $len)
+		{
+			$uuid .= substr($chars, (mt_rand()%strlen($chars)), 1);
+		}
+		return $uuid;
+	}
 }

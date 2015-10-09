@@ -5,51 +5,56 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
+ * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
  */
 
 (defined("SYSTEM_ROUTER_RUN") && SYSTEM_ROUTER_RUN) or die;
 
 abstract class Base
 {
+    
+    protected $auto_ = null;
+	protected $system_ = array();
+	
+	public function __construct()
+	{
+		$this->system_ = (object)array();
+		$this->_auto();
+	}
 
-    public $auto = null;
-    public $system = array();
-
-    public function __construct()
-    {
-        $this->system = (object)array();
-        $this->_auto();
-    }
-
-    final private function _auto()
-    {
-        if (Pools::get("base@construct") == false) {
-            $this->system->date = Pools::get("SYSTEMCONF@SYSTEM_TIME", true);
-            $this->system->time = Pools::get("SYSTEMCONF@SYSTEM_TIME", true);
-            $this->system->encoding = Pools::get("SYSTEMCONF@SYSTEM_ENCODING", true);
-            $this->auto = new Auto;
-            Pools::set("base@construct@auto", $this->auto);
-            Pools::set("base@construct@base_", $this->system);
-            Pools::set("base@construct", true);
-        } else {
-            $this->auto = Pools::get("base@construct@auto", true);
-            $this->system = Pools::get("base@construct@base_", true);
-        }
-    }
+	final private function _auto()
+	{
+		if (Pools::get("base@construct") == false)
+		{
+			$this->system_->date = Pools::get("SYSTEMCONF@SYSTEM_TIME", true);
+			$this->system_->encoding = Pools::get("SYSTEMCONF@SYSTEM_ENCODING", true);
+			$this->auto_ = new Auto;
+			Pools::set("base@construct@auto_", $this->auto_);
+			Pools::set("base@construct@base_", $this->system_);
+			Pools::set("base@construct", true);
+		}else
+		{
+			$this->auto_ = Pools::get("base@construct@auto_", true);
+			$this->system_ = Pools::get("base@construct@base_", true);
+		}
+		return;
+	}
 
     public function __set($name, $value)
     {
-        System::error(11120, $name);
+    	System::error(11120, $name);
+    	return;
     }
 
     public function __get($name)
     {
         System::error(11121, $name);
+        return;
     }
 
     public function __call($name, $arguments)
     {
         System::error(11122, $name);
+        return;
     }
 }

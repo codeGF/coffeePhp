@@ -5,25 +5,21 @@
  * Created by PhpStorm.
  * author: changguofeng <changguofeng3@163.com>.
  * createTime: 2015/9/8 14:14
- * °æÈ¨ËùÓÐ: ÔÊÐí×ÔÓÉÀ©Õ¹¿ª·¢,ÈçÓÐÎÊÌâ¼°½¨Òé¿É·´À¡ÓëÎÒ,·Ç³£¸ÐÐ» :)
+ * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¼°ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½Ð» :)
  */
-
 class Log
 {
 
-	public function set($filename, $str, $action='a+')
-	{
-		if (is_writable(ROOT))
-		{
-			if (!is_file(Pools::get("SYSTEMCONF@APP_LOGS_PATH", true)))
-			{
-				mkdir(Pools::get("SYSTEMCONF@APP_LOGS_PATH", true), 0777, TRUE);
-			}
-			error_log($str."\r\n", 3, sprintf("%s/%s", Pools::get("SYSTEMCONF@APP_LOGS_PATH", true), trim($filename, '/')));
-		}else
-		{
-			System::error(11131, ROOT);
-		}
-		return;
-	}
+    public function set($filename, $str)
+    {
+        if (is_writable(ROOT)) {
+            if (file_exists(Pools::get("SYSTEMCONF@APP_LOGS_PATH", true)) == false) {
+                mkdir(Pools::get("SYSTEMCONF@APP_LOGS_PATH", true), 0777, TRUE);
+            }
+            error_log($str . "\r\n", 3, sprintf("%s/%s", Pools::get("SYSTEMCONF@APP_LOGS_PATH", true), trim($filename, '/')));
+        } else {
+            System::error(11131, ROOT);
+        }
+        return;
+    }
 }

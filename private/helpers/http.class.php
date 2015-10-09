@@ -7,7 +7,6 @@
  * createTime: 2015/9/8 14:14
  * 版权所有: 允许自由扩展开发,如有问题及建议可反馈与我,非常感谢 :)
  */
-
 class Http
 {
 
@@ -18,10 +17,10 @@ class Http
      * @param string $local 本地保存文件名
      * @return mixed
      */
-    public function curlDownload($remote,$local)
+    public function curlDownload($remote, $local)
     {
         $cp = curl_init($remote);
-        $fp = fopen($local,"w");
+        $fp = fopen($local, "w");
         curl_setopt($cp, CURLOPT_FILE, $fp);
         curl_setopt($cp, CURLOPT_HEADER, 0);
         curl_exec($cp);
@@ -48,45 +47,42 @@ class Http
     public function fsockopenDownload($url, $conf = array())
     {
         $return = "";
-        if(!is_array($conf)) return $return;
+        if (!is_array($conf)) return $return;
         $matches = parse_url($url);
-        !isset($matches["host"]) 	&& $matches["host"] 	= "";
-        !isset($matches["path"]) 	&& $matches["path"] 	= "";
-        !isset($matches["query"]) 	&& $matches["query"] 	= "";
-        !isset($matches["port"]) 	&& $matches["port"] 	= "";
+        !isset($matches["host"]) && $matches["host"] = "";
+        !isset($matches["path"]) && $matches["path"] = "";
+        !isset($matches["query"]) && $matches["query"] = "";
+        !isset($matches["port"]) && $matches["port"] = "";
         $host = $matches["host"];
-        $path = $matches["path"] ? $matches["path"].($matches["query"] ? "?".$matches["query"] : "") : "/";
+        $path = $matches["path"] ? $matches["path"] . ($matches["query"] ? "?" . $matches["query"] : "") : "/";
         $port = !empty($matches["port"]) ? $matches["port"] : 80;
         $conf_arr = array(
-            "limit"		=>	0,
-            "post"		=>	"",
-            "cookie"	=>	"",
-            "ip"		=>	"",
-            "timeout"	=>	15,
-            "block"		=>	TRUE,
+            "limit" => 0,
+            "post" => "",
+            "cookie" => "",
+            "ip" => "",
+            "timeout" => 15,
+            "block" => TRUE,
         );
-        foreach (array_merge($conf_arr, $conf) as $k=>$v) ${$k} = $v;
-        if($post)
-        {
-            if(is_array($post))
-            {
+        foreach (array_merge($conf_arr, $conf) as $k => $v) ${$k} = $v;
+        if ($post) {
+            if (is_array($post)) {
                 $post = http_build_query($post);
             }
-            $out  = "POST $path HTTP/1.0\r\n";
+            $out = "POST $path HTTP/1.0\r\n";
             $out .= "Accept: */*\r\n";
             //$out .= "Referer: $boardurl\r\n";
             $out .= "Accept-Language: zh-cn\r\n";
             $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
             $out .= "User-Agent: $_SERVER[HTTP_USER_AGENT]\r\n";
             $out .= "Host: $host\r\n";
-            $out .= "Content-Length: ".strlen($post)."\r\n";
+            $out .= "Content-Length: " . strlen($post) . "\r\n";
             $out .= "Connection: Close\r\n";
             $out .= "Cache-Control: no-cache\r\n";
             $out .= "Cookie: $cookie\r\n\r\n";
             $out .= $post;
-        }else
-        {
-            $out  = "GET $path HTTP/1.0\r\n";
+        } else {
+            $out = "GET $path HTTP/1.0\r\n";
             $out .= "Accept: */*\r\n";
             //$out .= "Referer: $boardurl\r\n";
             $out .= "Accept-Language: zh-cn\r\n";
@@ -96,32 +92,25 @@ class Http
             $out .= "Cookie: $cookie\r\n\r\n";
         }
         $fp = fsockopen(($ip ? $ip : $host), $port, $errno, $errstr, $timeout);
-        if(!$fp)
-        {
+        if (!$fp) {
             return "";
-        }else
-        {
+        } else {
             stream_set_blocking($fp, $block);
             stream_set_timeout($fp, $timeout);
             fwrite($fp, $out);
             $status = stream_get_meta_data($fp);
-            if(!$status["timed_out"])
-            {
-                while (!feof($fp))
-                {
-                    if(($header = @fgets($fp)) && ($header == "\r\n" ||  $header == "\n"))
-                    {
+            if (!$status["timed_out"]) {
+                while (!feof($fp)) {
+                    if (($header = @fgets($fp)) && ($header == "\r\n" || $header == "\n")) {
                         break;
                     }
                 }
 
                 $stop = false;
-                while(!feof($fp) && !$stop)
-                {
+                while (!feof($fp) && !$stop) {
                     $data = fread($fp, ($limit == 0 || $limit > 8192 ? 8192 : $limit));
                     $return .= $data;
-                    if($limit)
-                    {
+                    if ($limit) {
                         $limit -= strlen($data);
                         $stop = $limit <= 0;
                     }
@@ -140,54 +129,45 @@ class Http
      * @access public
      * @param string $filename 下载文件名
      * @param string $showname 下载显示的文件名
-     * @param string $content  下载的内容
-     * @param integer $expire  下载内容浏览器缓存时间
+     * @param string $content 下载的内容
+     * @param integer $expire 下载内容浏览器缓存时间
      * @return void
      */
-    public function download ($filename, $showname="",$content="",$expire=180)
+    public function download($filename, $showname = "", $content = "", $expire = 180)
     {
-        if(is_file($filename))
-        {
+        if (is_file($filename)) {
             $length = filesize($filename);
-        }elseif(is_file(UPLOAD_PATH.$filename))
-        {
-            $filename = UPLOAD_PATH.$filename;
+        } elseif (is_file(UPLOAD_PATH . $filename)) {
+            $filename = UPLOAD_PATH . $filename;
             $length = filesize($filename);
-        }elseif($content != "")
-        {
+        } elseif ($content != "") {
             $length = strlen($content);
-        }else
-        {
-            System::error($filename."下载文件不存在！");
+        } else {
+            System::error($filename . "下载文件不存在！");
         }
-        if(empty($showname))
-        {
+        if (empty($showname)) {
             $showname = $filename;
         }
         $showname = basename($showname);
-        if(!empty($filename))
-        {
-            $finfo 	= 	new \finfo(FILEINFO_MIME);
-            $type 	= 	$finfo->file($filename);
-        }else
-        {
-            $type	=	"application/octet-stream";
+        if (!empty($filename)) {
+            $finfo = new \finfo(FILEINFO_MIME);
+            $type = $finfo->file($filename);
+        } else {
+            $type = "application/octet-stream";
         }
         //发送Http Header信息 开始下载
         System::header
         (
             array
             (
-                "Pragma: public", "Cache-control: max-age=".$expire, "Expires: " . gmdate("D, d M Y H:i:s",time()+$expire) . "GMT",
-                "Last-Modified: " . gmdate("D, d M Y H:i:s",time()) . "GMT", "Content-Disposition: attachment; filename=".$showname,
-                "Content-Length: ".$length, "Content-type: ".$type, "Content-Encoding: none", "Content-Transfer-Encoding: binary"
+                "Pragma: public", "Cache-control: max-age=" . $expire, "Expires: " . gmdate("D, d M Y H:i:s", time() + $expire) . "GMT",
+                "Last-Modified: " . gmdate("D, d M Y H:i:s", time()) . "GMT", "Content-Disposition: attachment; filename=" . $showname,
+                "Content-Length: " . $length, "Content-type: " . $type, "Content-Encoding: none", "Content-Transfer-Encoding: binary"
             )
         );
-        if($content == "" )
-        {
+        if ($content == "") {
             readfile($filename);
-        }else
-        {
+        } else {
             print($content);
         }
         System::quit();
@@ -197,27 +177,22 @@ class Http
      * 显示HTTP Header 信息
      * @return string
      */
-    public function getHeaderInfo($header="",$echo=true)
+    public function getHeaderInfo($header = "", $echo = true)
     {
         ob_start();
-        $headers   	= getallheaders();
-        if(!empty($header))
-        {
-            $info 	= $headers[$header];
-            echo($header.":".$info."\n"); ;
-        }else
-        {
-            foreach($headers as $key=>$val)
-            {
+        $headers = getallheaders();
+        if (!empty($header)) {
+            $info = $headers[$header];
+            echo($header . ":" . $info . "\n");;
+        } else {
+            foreach ($headers as $key => $val) {
                 echo("$key:$val\n");
             }
         }
         $output = ob_get_clean();
-        if ($echo)
-        {
-            echo (nl2br($output));
-        }else
-        {
+        if ($echo) {
+            echo(nl2br($output));
+        } else {
             return $output;
         }
     }

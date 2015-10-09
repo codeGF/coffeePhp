@@ -1,7 +1,7 @@
 <?php
 
 /**********************************************************************
- *  Author: Juergen Bouch¨¦ (jbouche@nurfuerspam.de)
+ *  Author: Juergen BouchÂ¨Â¦ (jbouche@nurfuerspam.de)
  *  Web...: http://www.juergenbouche.de
  *  Name..: ezSQL_mysqli
  *  Desc..: mySQLi component (part of ezSQL database abstraction library)
@@ -206,6 +206,7 @@ class ezSQL_mysqli extends ezSQLcore
 		// This keeps the connection alive for very long running scripts
 		if ( $this->num_queries >= 500 )
 		{
+			$this->num_queries = 0;
 			$this->disconnect();
 			$this->quick_connect($this->dbuser,$this->dbpassword,$this->dbname,$this->dbhost,$this->dbport,$this->encoding);
 		}

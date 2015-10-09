@@ -15,49 +15,48 @@ class Curl extends Base
 
     private $_ch = null;
     private $_url = null;
-    public  $proxy = null; //需要将请求发送那台服务器，为IP
-    public  $timeout = 30; //设置cURL允许执行的最长秒数
-    public  $connecttimeout = 10; //在发起连接前等待的时间(秒)，如果设置为0，则无限等待
-    public  $httpHead = false; //其他头信息，如果有将压入现有的头信息中
-    public  $referer = null; //请求来路url地址
+    public $proxy = null; //需要将请求发送那台服务器，为IP
+    public $timeout = 30; //设置cURL允许执行的最长秒数
+    public $connecttimeout = 10; //在发起连接前等待的时间(秒)，如果设置为0，则无限等待
+    public $httpHead = false; //其他头信息，如果有将压入现有的头信息中
+    public $referer = null; //请求来路url地址
 
     public function __construct()
     {
-    	parent::__construct();
-    	$this->_ch = curl_init();
+        parent::__construct();
+        $this->_ch = curl_init();
     }
 
     public function __destruct()
     {
-    	$this->_clear();
+        $this->_clear();
     }
 
-    private function _encoding($data, $in_encoding="", $out_encoding="")
+    private function _encoding($data, $in_encoding = "", $out_encoding = "")
     {
-        if ($in_encoding && $out_encoding)
-        {
-            $data = $this->auto_->helpers->str->array_iconv($data, $in_encoding, $out_encoding);
+        if ($in_encoding && $out_encoding) {
+            $data = $this->auto->helpers->str->array_iconv($data, $in_encoding, $out_encoding);
         }
         return $data;
     }
 
     private function _clear()
     {
-    	$this->proxy = null;
-    	$this->referer = null;
-    	$this->connecttimeout = 10;
-    	$this->timeout = 30;
+        $this->proxy = null;
+        $this->referer = null;
+        $this->connecttimeout = 10;
+        $this->timeout = 30;
         $this->httpHead = array();
-    	$this->_url = null;
-    	curl_close($this->_ch);
-    	$this->_ch = null;
+        $this->_url = null;
+        curl_close($this->_ch);
+        $this->_ch = null;
     }
 
     private function _curl_setpot()
     {
         curl_setopt($this->_ch, CURLOPT_URL, str_replace(" ", "", $this->_url));
         curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($this->_ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($this->_ch, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($this->_ch, CURLOPT_NOSIGNAL, 1);
         curl_setopt($this->_ch, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
         curl_setopt($this->_ch, CURLOPT_HEADER, false);
@@ -70,14 +69,14 @@ class Curl extends Base
         curl_setopt($this->_ch, CURLOPT_HTTPHEADER, $this->_httpHeader());
     }
 
-    public function fileGetContents($url, $in_encoding="", $out_encoding="")
+    public function fileGetContents($url, $in_encoding = "", $out_encoding = "")
     {
         $this->_url = $this->_encoding($url, $in_encoding, $out_encoding);
         $this->_curl_setpot();
         return $this->results();
     }
 
-    public function post($url, $data, $in_encoding="", $out_encoding="")
+    public function post($url, $data, $in_encoding = "", $out_encoding = "")
     {
         $data = $this->_encoding($data, $in_encoding, $out_encoding);
         $this->_url = $url;
@@ -87,7 +86,7 @@ class Curl extends Base
         return $this->results();
     }
 
-    public function get($url, $data, $in_encoding="", $out_encoding="")
+    public function get($url, $data, $in_encoding = "", $out_encoding = "")
     {
         $data = $this->_encoding($data, $in_encoding, $out_encoding);
         $this->_url = sprintf("%s?%s", trim($url, "?"), http_build_query($data));
@@ -98,7 +97,7 @@ class Curl extends Base
     //输出结果
     private function results()
     {
-    	$results = array();
+        $results = array();
         $results["data"] = curl_exec($this->_ch); //获取内容
         $results["error"] = curl_error($this->_ch); //错误提示
         $results["errno"] = curl_errno($this->_ch); //错误代码
@@ -112,14 +111,11 @@ class Curl extends Base
     private function _isTimeOut($connectTime, $totalTime)
     {
         $result = "";
-        if ($connectTime > $this->connecttimeout)
-        {
+        if ($connectTime > $this->connecttimeout) {
             $result = "CONNECTTIMEOUT";
-        }else if ($totalTime > $this->timeout)
-        {
+        } else if ($totalTime > $this->timeout) {
             $result = "TIMEOUT";
-        }else
-       {
+        } else {
             $result = $totalTime;
         }
         return $result;
@@ -127,18 +123,17 @@ class Curl extends Base
 
     private function _httpHeader()
     {
-    	$head = array(
-    			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    			"Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
-    			"Cache-Control: no-cache",
-    			"Connection: Close",
-    			"User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"
-    	);
-    	if ($this->httpHead != false)
-    	{
-    		$head = array_merge($head, (array)$this->httpHead);
-    	}
-    	return $head;
+        $head = array(
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+            "Cache-Control: no-cache",
+            "Connection: Close",
+            "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"
+        );
+        if ($this->httpHead != false) {
+            $head = array_merge($head, (array)$this->httpHead);
+        }
+        return $head;
     }
 
     public function curlerrno($k)

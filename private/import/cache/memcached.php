@@ -15,8 +15,7 @@ class ExtMemcached
 
     private function _memdConn()
     {
-        if (!self::$_conn)
-        {
+        if (!self::$_conn) {
             self::$_conn = new Memcached;
             $this->_addServer($this->_conf["memcached"]);
         }
@@ -34,16 +33,12 @@ class ExtMemcached
 
     private function _getMemdKey($key)
     {
-        if (is_array($key))
-        {
-            foreach ($key as $k => $v)
-            {
-                $key["$k"] = System::hash($this->_conf["key"].$v);
+        if (is_array($key)) {
+            foreach ($key as $k => $v) {
+                $key["$k"] = System::hash($this->_conf["key"] . $v);
             }
-        }
-        else
-       {
-            $key = System::hash($this->_conf["key"].$key);
+        } else {
+            $key = System::hash($this->_conf["key"] . $key);
         }
         return $key;
     }
@@ -53,34 +48,31 @@ class ExtMemcached
         return serialize($var);
     }
 
-    public function add($key, $var, $expire="")
+    public function add($key, $var, $expire = "")
     {
-        return self::$_conn->add
-        (
-        		$this->_getMemdKey($key),
-        		$this->_getMemdVar($var),
-        		$expire ? $expire : $this->_conf["expire"]
+        return self::$_conn->add(
+            $this->_getMemdKey($key),
+            $this->_getMemdVar($var),
+            $expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function set($key, $var, $expire="")
+    public function set($key, $var, $expire = "")
     {
-        return self::$_conn->set
-        (
-        		$this->_getMemdKey($key),
-        		$this->_getMemdVar($var),
-        		$expire ? $expire : $this->_conf["expire"]
+        return self::$_conn->set(
+            $this->_getMemdKey($key),
+            $this->_getMemdVar($var),
+            $expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function replace($key, $var, $expire="")
+    public function replace($key, $var, $expire = "")
     {
-    	return self::$_conn->replace
-    	(
-    			$this->_getMemdKey($key),
-    			$this->_getMemdVar($var),
-    			$expire ? $expire : $this->_conf["expire"]
-    	);
+        return self::$_conn->replace(
+            $this->_getMemdKey($key),
+            $this->_getMemdVar($var),
+            $expire ? $expire : $this->_conf["expire"]
+        );
     }
 
     public function get($key)
@@ -101,11 +93,9 @@ class ExtMemcached
 
     public function exists($key)
     {
-        if ($this->get($key))
-        {
+        if ($this->get($key)) {
             $result = true;
-        }else
-       {
+        } else {
             $result = false;
         }
         return $result;

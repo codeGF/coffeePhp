@@ -13,7 +13,7 @@ class ExtApcCache
 
     private function _getApcKey($key)
     {
-        return System::hash($this->_conf["key"].$key);
+        return System::hash($this->_conf["key"] . $key);
     }
 
     private function _getApcVar($var)
@@ -21,30 +21,28 @@ class ExtApcCache
         return serialize($var);
     }
 
-    public function add($key, $var, $expire="")
+    public function add($key, $var, $expire = "")
     {
-        return apc_add
-        (
-        		$this->_getApcKey($key),
-        		$this->_getApcVar($var),
-        		$expire ? $expire : $this->_conf["expire"]
+        return apc_add(
+            $this->_getApcKey($key),
+            $this->_getApcVar($var),
+            $expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function set($key, $var, $expire="")
+    public function set($key, $var, $expire = "")
     {
-        return apc_add
-        (
-        		$this->_getApcKey($key),
-        		$this->_getApcVar($var),
-        		$expire ? $expire : $this->_conf["expire"]
+        return apc_add(
+            $this->_getApcKey($key),
+            $this->_getApcVar($var),
+            $expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function replace($key, $var, $expire="")
+    public function replace($key, $var, $expire = "")
     {
-    	$this->delete($key);
-    	return $this->set($key, $var, $expire);
+        $this->delete($key);
+        return $this->set($key, $var, $expire);
     }
 
     public function get($key)

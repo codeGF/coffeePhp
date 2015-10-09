@@ -141,7 +141,7 @@ class Code extends Base
 
     public function __construct($session_key)
     {
-    	parent::__construct();
+        parent::__construct();
         $this->session_name = $session_key;
     }
 
@@ -155,7 +155,7 @@ class Code extends Base
 
         $this->bgColor = $this->allBgColor[array_rand($this->allBgColor)];
         $this->fontColor = $this->allFontColor[array_rand($this->allFontColor)];
-        $this->fontDir = Pools::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true).'/code/font/';
+        $this->fontDir = Pools::get("SYSTEMCONF@SYSTEM_IMPORT_PATH", true) . '/code/font/';
         $this->font = $this->fontConfig[array_rand($this->fontConfig)];
 
         $min_angle = 7;
@@ -192,8 +192,8 @@ class Code extends Base
             $this->sub_im[] = $this->genSubCharImg($rand_char);
         }
         //设置session
-        $this->auto_->helpers->session->delete($this->session_name);
-        $this->auto_->helpers->session->set($this->session_name, $this->vcode_str);
+        $this->auto->helpers->session->delete($this->session_name);
+        $this->auto->helpers->session->set($this->session_name, $this->vcode_str);
         $this->mergSubImage($this->sub_im);
         $this->outputImg();
         return $this->vcode_str;
@@ -202,8 +202,8 @@ class Code extends Base
     /**
      * 将单个字符生成透明背景图片.
      *
-     * @param string $char   需要生成图片的字符串
-     * @return resource		 返回图像资源句柄.
+     * @param string $char 需要生成图片的字符串
+     * @return resource         返回图像资源句柄.
      */
     protected function genSubCharImg($char)
     {
@@ -220,8 +220,7 @@ class Code extends Base
         //如果字体配置中增加了 字体大小的配置，这里在设置字体大小时会首先 使用配置的字体大小，如果没有设置，则使用下面的计算方式计算字体大小.
         if (isset($this->font['max_size']) && isset($this->font['min_size']) && $this->font['max_size'] > 0 && $this->font['min_size'] > 0) {
             $font_size = rand(min($this->font['max_size'], $this->font['min_size']), max($this->font['max_size'], $this->font['min_size']));
-        }else
-       {
+        } else {
             $font_size = rand($char_img_width * 2 / 5, $char_img_width * 1 / 2);
         }
         $angle = $this->angle * $this->rotation_direction;
@@ -230,27 +229,23 @@ class Code extends Base
         $font_height = max($box[1], $box[3]) - min($box[5], $box[7]);
 
         //调整字体大小，防止字符出界 左右方向判定.
-        while (($font_width > $char_img_width * 0.90 || $font_width * $this->vcodeCount > $this->width) && $font_size > 1)
-        {
+        while (($font_width > $char_img_width * 0.90 || $font_width * $this->vcodeCount > $this->width) && $font_size > 1) {
             $font_size--;
             $box = $this->imagettfbbox_fixed($font_size, $angle, $font_name, $char);
             $font_width = max($box[2], $box[4]) - min($box[0], $box[6]);
             $font_height = max($box[1], $box[3]) - min($box[5], $box[7]);
-            if ($font_width <= $char_img_width)
-            {
+            if ($font_width <= $char_img_width) {
                 $font_size = rand(floor($font_size * 0.75), $font_size);
                 break;
             }
         }
         //调整字体大小，防止字符出界在上下方向判定
-        while ($font_height > $char_img_height * 0.95 && $font_size > 1)
-        {
+        while ($font_height > $char_img_height * 0.95 && $font_size > 1) {
             $font_size--;
             $box = $this->imagettfbbox_fixed($font_size, $angle, $font_name, $char);
             $font_width = max($box[2], $box[4]) - min($box[0], $box[6]);
             $font_height = max($box[1], $box[3]) - min($box[5], $box[7]);
-            if ($font_height <= $char_img_height)
-            {
+            if ($font_height <= $char_img_height) {
                 $font_size = rand(floor($font_size * 0.75), $font_size);
                 break;
             }
@@ -268,23 +263,21 @@ class Code extends Base
         $index = 0;
         $next_image_x = 0;
         $sub_images_len = count($sub_images);
-        if ($sub_images_len > 0)
-        {
+        if ($sub_images_len > 0) {
             $sub_img_width = imagesx($sub_images[0]);
             $sub_img_height = imagesy($sub_images[0]);
             imagecopy($this->im, $sub_images[0], $next_image_x, 0, 0, 0, $sub_img_width, $sub_img_height);
             $next_image_x += imagesx($sub_images[0]);
-            $index ++;
+            $index++;
         }
-        while ($index < $sub_images_len)
-        {
+        while ($index < $sub_images_len) {
             $sub_img_width = imagesx($sub_images[$index]);
             $sub_img_height = imagesy($sub_images[$index]);
             $distance = $this->calc2CharDistance($sub_images[$index - 1], $sub_images[$index]);
             $distance += $this->font_space;
             imagecopy($this->im, $sub_images[$index], $next_image_x - $distance, 0, 0, 0, $sub_img_width, $sub_img_height);
             $next_image_x += imagesx($sub_images[$index]) - $distance;
-            $index ++;
+            $index++;
         }
     }
 
@@ -299,8 +292,7 @@ class Code extends Base
 
         $tmp = array();
         $left_len = count($left);
-        for ($i = 0; $i < $left_len; $i++)
-        {
+        for ($i = 0; $i < $left_len; $i++) {
             $tmp[$i] = $left[$i][1] + $right[$i][0];
         }
         return min($tmp);
@@ -316,24 +308,19 @@ class Code extends Base
         $width = imagesx($img);
         $height = imagesy($img);
         $result = array();
-        for ($i = 0; $i < $height; $i++)
-        {
+        for ($i = 0; $i < $height; $i++) {
             $result[$i] = array($width, $width);
         }
-        for ($i = 0; $i < $height; $i++)
-        {
-            for ($j = 0; $j < $width; $j++)
-            {
+        for ($i = 0; $i < $height; $i++) {
+            for ($j = 0; $j < $width; $j++) {
                 $pixel = imagecolorat($img, $j, $i);
                 // 透明颜色使用32位整形存储，非透明颜色使用 24位整形存储，
                 // 透明颜色构成 ARGB ，A : alpha值（透明度，），每一种颜色使用二进制存储时均为8个bit长度(最大值255).
                 //位移运算，找出颜色透明度
                 $opacity = $pixel >> 24;
                 //颜色透明度范围0-127，127 表示完全透明,0表示完全不透明.
-                if ($opacity < 127)
-                {
-                    if ($result[$i][0] == $width)
-                    {
+                if ($opacity < 127) {
+                    if ($result[$i][0] == $width) {
                         $result[$i][0] = $j;
                     }
                     $result[$i][1] = $width - $j - 1;
@@ -350,12 +337,12 @@ class Code extends Base
      *
      * @link http://cn.php.net/manual/en/function.imagettfbbox.php#43523
      *
-     * @param resource $image	图像资源句柄
-     * @param int $font_size	字体大小
-     * @param int $angle		倾斜角度
-     * @param int $font_color	字体颜色
-     * @param string $font_path	字体路径(绝对路径)
-     * @param string $text		需要绘制的字符
+     * @param resource $image 图像资源句柄
+     * @param int $font_size 字体大小
+     * @param int $angle 倾斜角度
+     * @param int $font_color 字体颜色
+     * @param string $font_path 字体路径(绝对路径)
+     * @param string $text 需要绘制的字符
      * @return 绘制字符串的在图像上四个顶点坐标
      */
     protected function drawCenterImage($image, $font_size, $angle, $font_color, $font_path, $text)
@@ -411,16 +398,15 @@ class Code extends Base
     /**
      * 修复php内置的imagettfbbox 方法.便于精确计算 字符在图像上的宽度、高度
      *
-     * @param int $size		字体尺寸
-     * @param int $angle	倾斜角度
-     * @param string $fontfile	字体路径
-     * @param string $text	字符
+     * @param int $size 字体尺寸
+     * @param int $angle 倾斜角度
+     * @param string $fontfile 字体路径
+     * @param string $text 字符
      * @return array
      */
     protected function imagettfbbox_fixed($size, $angle, $fontfile, $text)
     {
-        if ($angle == 0)
-        {
+        if ($angle == 0) {
             return imagettfbbox($size, 0, $fontfile, $text);
         }
         // compute size with a zero angle
@@ -432,8 +418,7 @@ class Code extends Base
         $sa = sin($a);
         $ret = array();
         // 执行转换
-        for ($i = 0; $i < 7; $i += 2)
-        {
+        for ($i = 0; $i < 7; $i += 2) {
             $ret[$i] = round($coords[$i] * $ca + $coords[$i + 1] * $sa);
             $ret[$i + 1] = round($coords[$i + 1] * $ca - $coords[$i] * $sa);
         }
@@ -446,19 +431,15 @@ class Code extends Base
      */
     protected function freeResource()
     {
-        if (!empty($this->sub_im))
-        {
-            foreach ($this->sub_im as $im)
-            {
-                if ($im)
-                {
+        if (!empty($this->sub_im)) {
+            foreach ($this->sub_im as $im) {
+                if ($im) {
                     @imagedestroy($im);
                     $im = null;
                 }
             }
         }
-        if (!empty($this->im))
-        {
+        if (!empty($this->im)) {
             @imagedestroy($this->im);
             $this->im = null;
         }

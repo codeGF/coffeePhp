@@ -9,41 +9,35 @@
  * 数据库执行错误管理
  * @param msg 错误信息
  */
-
 class DBmanagEment extends Base
 {
 
-    public  static $msg = array();
-    private static $_act = array
-    (
+    public static $msg = array();
+    private static $_act = array(
         1146 => "createTable"
     );
     private static $_errSqlPreg = "/^insert|^delete|^update/is";
 
     public static function main() //开始分析错误
     {
-        self::errno(); self::errsql();
-        return;
+        self::errno();
+        self::errsql();
     }
 
     private static function errno() //针对错误码分析处理
     {
-        if (empty(self::$msg["errno"]) == false)
-        {
-            if (isset(self::$_act[self::$msg["errno"]]) == true)
-            {
+        if (empty(self::$msg["errno"]) == false) {
+            if (isset(self::$_act[self::$msg["errno"]]) == true) {
                 $fun = self::$_act[self::$msg["errno"]];
                 self::$fun();
             }
         }
-        return;
     }
 
     private static function errsql() //sql错误分析处理
     {
         $rtn = false;
-        if (preg_match(self::$_errSqlPreg, self::$msg["query"]) == true && self::$msg["show_errors"] == false)
-        {
+        if (preg_match(self::$_errSqlPreg, self::$msg["query"]) == true && self::$msg["show_errors"] == false) {
             $rtn = self::_conn()->query(self::$msg["query"]);
         }
         return $rtn;
@@ -57,14 +51,11 @@ class DBmanagEment extends Base
     private static function createTable() //创建表
     {
         $conf = Pools::get("DBmanagementConf");
-        if ($conf != false && empty($conf["tabname"])==false && empty($conf["createTable"])==false)
-        {
-            if (self::_conn() != false)
-            {
-                $sql = str_replace("{table}", $conf["tabname"], $conf["createTable"]);
+        if ($conf != false && empty($conf["table"]) == false && empty($conf["create"]) == false) {
+            if (self::_conn() != false) {
+                $sql = str_replace("{table}", $conf["table"], $conf["create"]);
                 self::_conn()->query($sql);
             }
         }
-        return;
     }
 }

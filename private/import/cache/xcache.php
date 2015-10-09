@@ -21,30 +21,28 @@ class ExtXcache
         return serialize($var);
     }
 
-    public function add($key, $var, $expire="")
+    public function add($key, $var, $expire = "")
     {
-        return xcache_set
-        (
-        		$this->_getXcacheKey($key),
-        		$this->_getXcacheVar($var),
-        		$expire ? $expire : $this->_conf["expire"]
+        return xcache_set(
+            $this->_getXcacheKey($key),
+            $this->_getXcacheVar($var),
+            $expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function set($key, $var, $expire="")
+    public function set($key, $var, $expire = "")
     {
-        return $this->add
-        (
-        		$key,
-        		$var,
-        		$expire ? $expire : $this->_conf["expire"]
+        return $this->add(
+            $key,
+            $var,
+            $expire ? $expire : $this->_conf["expire"]
         );
     }
 
-    public function replace($key, $var, $expire="")
+    public function replace($key, $var, $expire = "")
     {
-    	$this->delete($key);
-    	return $this->set($key, $var, $expire);
+        $this->delete($key);
+        return $this->set($key, $var, $expire);
     }
 
     public function get($key)
@@ -66,8 +64,7 @@ class ExtXcache
     public function clean()
     {
         $cnt = xcache_count(XC_TYPE_VAR);
-        for ($i=0; $i < $cnt; $i++)
-        {
+        for ($i = 0; $i < $cnt; $i++) {
             xcache_clear_cache(XC_TYPE_VAR, $i);
         }
         return true;

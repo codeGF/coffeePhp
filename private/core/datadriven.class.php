@@ -16,140 +16,139 @@
  * @method 支持：pdo mysql mssql mysqli cubrid oracle postgresql sqlsrv sybase
  * @return object
  */
-
 class DataDriven extends Base
 {
 
-    final protected function pdo_($show_errors=true, $action=null) //pdo驱动
+    final protected function pdo_($show_errors = true, $action = null) //pdo驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $pdo = Pools::get("pdo{$action}");
-        if ($pdo == false)
-        {
-            $this->auto_->import->load("ezsql/pdo/ez_sql_pdo.php");
+        if ($pdo == false) {
+            $this->auto->import->load("ezsql/pdo/ez_sql_pdo.php");
             $conf = Pools::get("DB_CONF@{$action}@pdo", true);
             $pdo = new ezSQL_pdo($conf["dsn"], $conf["user"], $conf["password"], $conf["options"]);
             Pools::set("pdo{$action}", $pdo);
+            Pools::up("DBmanagementConn", $pdo);
         }
         $pdo->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $pdo;
     }
 
-    final protected function mysql_($show_errors=true, $action=null) //mysql驱动
+    final protected function mysql_($show_errors = true, $action = null) //mysql驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $mysql = Pools::get("mysql{$action}");
-        if ($mysql == false)
-        {
+        if ($mysql == false) {
             $conf = Pools::get("DB_CONF@{$action}@mysql", true);
-            $this->auto_->import->load("ezsql/mysql/ez_sql_mysql.php");
+            $this->auto->import->load("ezsql/mysql/ez_sql_mysql.php");
             $mysql = new ezSQL_mysql($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["charset"]);
             Pools::set("mysql{$action}", $mysql);
+            Pools::up("DBmanagementConn", $mysql);
         }
         $mysql->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $mysql;
     }
 
-    final protected function mysqli_($show_errors=true, $action=null) //mysql驱动，支持mysqli
+    final protected function mysqli_($show_errors = true, $action = null) //mysql驱动，支持mysqli
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $mysqli = Pools::get("mysqli{$action}");
-        if ($mysqli == false)
-        {
+        if ($mysqli == false) {
             $conf = Pools::get("DB_CONF@{$action}@mysqli", true);
-            $this->auto_->import->load("ezsql/mysqli/ez_sql_mysqli.php");
+            $this->auto->import->load("ezsql/mysqli/ez_sql_mysqli.php");
             $mysqli = new ezSQL_mysqli($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["charset"]);
             Pools::set("mysqli{$action}", $mysqli);
+            Pools::up("DBmanagementConn", $mysqli);
         }
         $mysqli->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $mysqli;
     }
 
-    final protected function mssql_($show_errors=true, $action=null) //sqlserver驱动
+    final protected function mssql_($show_errors = true, $action = null) //sqlserver驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $mssql = Pools::get("mssql{$action}");
-        if ($mssql == false)
-        {
+        if ($mssql == false) {
             $conf = Pools::get("DB_CONF@{$action}@mssql", true);
-            $this->auto_->import->load("ezsql/mssql/ez_sql_mssql.php");
+            $this->auto->import->load("ezsql/mssql/ez_sql_mssql.php");
             $mssql = new ezSQL_mssql($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["conv"]);
             Pools::set("mssql{$action}", $mssql);
+            Pools::up("DBmanagementConn", $mssql);
         }
         $mssql->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $mssql;
     }
 
-    final protected function postgresql_($show_errors=true, $action=null) //postgresql驱动
+    final protected function postgresql_($show_errors = true, $action = null) //postgresql驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $postgresql = Pools::get("postgresql{$action}");
-        if ($postgresql == false)
-        {
+        if ($postgresql == false) {
             $conf = Pools::get("DB_CONF@{$action}@postgresql", true);
-            $this->auto_->import->load("ezsql/postgresql/ez_sql_postgresql.php");
+            $this->auto->import->load("ezsql/postgresql/ez_sql_postgresql.php");
             $postgresql = new ezSQL_postgresql($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["port"]);
             Pools::set("postgresql{$action}", $postgresql);
+            Pools::up("DBmanagementConn", $postgresql);
         }
         $postgresql->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $postgresql;
     }
 
-    final protected function sqlsrv_($show_errors=true, $action=null) //sqlsrv驱动
+    final protected function sqlsrv_($show_errors = true, $action = null) //sqlsrv驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $sqlsrv = Pools::get("sqlsrv{$action}");
-        if ($sqlsrv)
-        {
+        if ($sqlsrv) {
             $conf = Pools::get("DB_CONF@{$action}@sqlsrv", true);
-            $this->auto_->import->load("ezsql/sqlsrv/es_sql_sqlsrv.php");
+            $this->auto->import->load("ezsql/sqlsrv/es_sql_sqlsrv.php");
             $sqlsrv = new ezSQL_sqlsrv($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["conv"]);
             Pools::set("sqlsrv{$action}", $sqlsrv);
+            Pools::up("DBmanagementConn", $sqlsrv);
         }
         $sqlsrv->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $sqlsrv;
     }
 
-    final protected function sybase_($show_errors=true, $action=null) //sybase驱动
+    final protected function sybase_($show_errors = true, $action = null) //sybase驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $sybase = Pools::get("sybase{$action}");
-        if ($sybase == false)
-        {
+        if ($sybase == false) {
             $conf = Pools::get("DB_CONF@{$action}@sybase", true);
-            $this->auto_->import->load("ezsql/sqlbase/ez_sql_sybase.php");
+            $this->auto->import->load("ezsql/sqlbase/ez_sql_sybase.php");
             $sybase = new ezSQL_sybase($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["conv"]);
             Pools::set("sybase{$action}", $sybase);
+            Pools::up("DBmanagementConn", $sybase);
         }
         $sybase->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $sybase;
     }
 
-    final protected function cubird_($show_errors=true, $action=null) //cubird驱动
+    final protected function cubird_($show_errors = true, $action = null) //cubird驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $cubird = Pools::get("cubird{$action}");
-        if ($cubird == false)
-        {
+        if ($cubird == false) {
             $conf = Pools::get("DB_CONF@{$action}@cubird", true);
-            $this->auto_->import->load("ezsql/cubrid/ez_sql_cubrid.php");
+            $this->auto->import->load("ezsql/cubrid/ez_sql_cubrid.php");
             $cubird = new ezSQL_cubrid($conf["user"], $conf["password"], $conf["dbname"], $conf["host"], $conf["port"]);
             Pools::set("cubird{$action}", $cubird);
+            Pools::up("DBmanagementConn", $cubird);
         }
         $cubird->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $cubird;
     }
 
-    final protected function oracle_($show_errors=true, $action=null) //oracle驱动
+    final protected function oracle_($show_errors = true, $action = null) //oracle驱动
     {
         $action != null ? false : $action = Pools::get("SYSTEMCONF@SYSTEM_DEFINE_DB_GATE", true);
         $oracle = Pools::get("oracle{$action}");
-        if ($oracle == false)
-        {
+        if ($oracle == false) {
             $conf = Pools::get("DB_CONF@{$action}@oracle", true);
-            $this->auto_->import->load("ezsql/oracle8_9/ez_sql_oracle8_9.php");
+            $this->auto->import->load("ezsql/oracle8_9/ez_sql_oracle8_9.php");
             $oracle = new ezSQL_oracle8_9($conf["user"], $conf["password"], $conf["connstr"]);
             Pools::set("oracle{$action}", $oracle);
+            Pools::up("DBmanagementConn", $oracle);
         }
         $oracle->show_errors = is_bool($show_errors) ? $show_errors : true;
         return $oracle;
